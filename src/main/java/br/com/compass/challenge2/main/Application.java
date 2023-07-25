@@ -1,4 +1,4 @@
-package br.com.compass.challenge2;
+package br.com.compass.challenge2.main;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
