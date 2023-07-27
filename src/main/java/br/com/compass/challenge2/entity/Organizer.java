@@ -27,9 +27,9 @@ public class Organizer extends Person{
     @JoinTable(name = "organizers_groups", joinColumns = @JoinColumn(name = "organizer_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
     private List<Group> groups;
 
-    @ElementCollection(targetClass = Profile.class)
+    @ElementCollection(targetClass = Role.class)
     @JoinTable(name = "organizers_profiles", joinColumns = @JoinColumn(name = "organizer_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "profile")
-    private List<Profile> profiles;
+    private List<Role> profiles;
 }
