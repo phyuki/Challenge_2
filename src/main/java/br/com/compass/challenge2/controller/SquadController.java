@@ -17,9 +17,8 @@ import br.com.compass.challenge2.entity.Squad;
 import br.com.compass.challenge2.service.SquadService;
 
 @RestController
-@RequestMapping
+@RequestMapping("/squad")
 public class SquadController {
-	
 	private final SquadService squadService;
 	
 	public SquadController(SquadService squadService) {

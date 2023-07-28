@@ -10,9 +10,11 @@ import java.util.Optional;
 
 @Service
 public class GroupService{
-
-    @Autowired
     private GroupRepository groupRepository;
+    @Autowired
+    public GroupService(GroupRepository groupRepository) {
+        this.groupRepository = groupRepository;
+    }
 
     public List<Group> findAll() {
         return groupRepository.findAll();
@@ -31,7 +33,7 @@ public class GroupService{
     }
 
     public Group findDistinctByName(String name) {
-        return groupRepository.findDistinctByName(name);
+        return groupRepository.findByName(name);
     }
 
     public Group save(Group group) {

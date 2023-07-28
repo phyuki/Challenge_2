@@ -19,7 +19,7 @@ import br.com.compass.challenge2.service.StudentService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/students")
+@RequestMapping("/student")
 public class StudentController {
 
     private final StudentService studentService;

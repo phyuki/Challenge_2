@@ -2,24 +2,25 @@ package br.com.compass.challenge2.service;
 
 
 import br.com.compass.challenge2.entity.Organizer;
-import br.com.compass.challenge2.entity.Student;
 import br.com.compass.challenge2.repository.OrganizerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
+@Service
 public class OrganizerService {
-    private final OrganizerRepository organizerRepository;
-
+    private OrganizerRepository organizerRepository;
+    @Autowired
     public OrganizerService(OrganizerRepository organizerRepository) {
         this.organizerRepository = organizerRepository;
     }
 
-    public Optional<Student> findById(Long id) {
-        return organizerRepository.findById(id);
+    public Organizer findById(Long id) {
+        return organizerRepository.findById(id).orElse(null);
     }
 
-    public List<Student> findAll() {
+    public List<Organizer> findAll() {
         return organizerRepository.findAll();
     }
 
@@ -27,10 +28,10 @@ public class OrganizerService {
     }
 
     public void update(Organizer organizer) {
-        organizerRepository.update(organizer);
+        organizerRepository.save(organizer);
     }
 
     public void delete(Long id) {
-        organizerRepository.delete(id);
+        organizerRepository.deleteById(id);
     }
 }

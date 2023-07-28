@@ -10,11 +10,11 @@ import br.com.compass.challenge2.repository.SquadRepository;
 
 @Service
 public class SquadService {
-	
-	@Autowired
-	 private final SquadRepository squadRepository;
 
-	    public SquadService(SquadRepository squadRepository) {
+	 private SquadRepository squadRepository;
+
+	 @Autowired
+	 public SquadService(SquadRepository squadRepository) {
 	        this.squadRepository = squadRepository;
 	    }
 	    

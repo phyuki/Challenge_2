@@ -1,16 +1,8 @@
 package br.com.compass.challenge2.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
 @Table(name = "squads")
 @Entity
@@ -28,7 +20,7 @@ public class Squad {
     @Column(name = "squad_name", nullable = false)
     private String squadName;
 
-    @OneToMany(mappedBy = "squad", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "squad", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Student> students;
     
     public String getSquadName() {

@@ -1,18 +1,9 @@
 package br.com.compass.challenge2.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
 @Table(name = "pb_groups")
 @Entity
@@ -24,13 +15,12 @@ public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = false)
     private Long id;
 
     @Column(name = "group_name", nullable = false)
-    private String groupName;
+    private String name;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Student> students;
 
     @ManyToMany(mappedBy = "groups")

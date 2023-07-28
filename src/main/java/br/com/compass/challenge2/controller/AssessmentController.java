@@ -18,6 +18,7 @@ public class AssessmentController {
     public AssessmentController(AssessmentService assessmentService) {
         this.assessmentService = assessmentService;
     }
+
     @PostMapping
     public ResponseEntity<Assessment> createAssessment(@Valid  @RequestBody Assessment assessment) {
         Assessment createdAssessment = assessmentService.createAssessment(assessment);
