@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -25,14 +26,7 @@ public class GroupService implements CrudService<Group> {
 
     @Override
     public Group findById(Long id) {
-        Optional<Group> result = groupRepository.findById(id);
-        Group resultGroup = null;
-        if (result.isPresent()) {
-            resultGroup = result.get();
-        } else {
-            throw new RuntimeException("Did not find any group with id: " + id);
-        }
-        return resultGroup;
+        return groupRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     public Group findDistinctByName(String name) {
