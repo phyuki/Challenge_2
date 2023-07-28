@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Table(name = "assessments")
@@ -19,15 +21,18 @@ public class Assessment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true)
+    @Column(unique = true)
     private Long id;
 
+    @NotNull
     @ManyToOne
     private Student student;
 
-    @Column(name = "activity_name", nullable = false)
+    @NotBlank
+    @Column(nullable = false)
     private String activityName;
 
-    @Column(name = "grade", nullable = false)
+    @NotNull
+    @Column(nullable = false)
     private Float grade;
 }
