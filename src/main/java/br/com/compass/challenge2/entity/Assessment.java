@@ -21,7 +21,7 @@ public class Assessment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true)
+    @Column(unique = true)
     private Long id;
 
     @NotNull
@@ -29,10 +29,10 @@ public class Assessment {
     private Student student;
 
     @NotBlank
-    @Column(name = "activity_name", nullable = false)
+    @Column(nullable = false)
     private String activityName;
 
     @NotNull
-    @Column(name = "grade", nullable = false)
+    @Column(nullable = false)
     private Float grade;
 }
