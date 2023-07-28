@@ -7,8 +7,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import jakarta.validation.constraints.Pattern;
-
 
 @MappedSuperclass
 @Getter
