@@ -40,6 +40,6 @@ public class OrganizerController {
 
     @DeleteMapping("/{id}") // Endpoint to delete an organizer by id
     public void deleteOrganizer(@PathVariable Long id) {
-        organizerService.delete(id);
+        organizerService.deleteById(id);
     }
 }

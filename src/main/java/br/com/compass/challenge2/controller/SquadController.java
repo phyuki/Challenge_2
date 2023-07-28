@@ -28,14 +28,14 @@ public class SquadController {
 	// Mostrar todos squads.
 	@GetMapping("/squads")
 	public ResponseEntity<List<Squad>> getAllSquads(){
-		List<Squad> squads = squadService.getAllSquads();
+		List<Squad> squads = squadService.findAll();
 		return ResponseEntity.ok(squads);		
 	}
 		
 	// Mostrar um squad específico pelo id.
 	@GetMapping("/{id}")
 	public ResponseEntity<Squad> getSquadById(@PathVariable Long id){
-		Squad squad = squadService.getSquadById(id);
+		Squad squad = squadService.findById(id);
 		if (squad != null) {
 			return ResponseEntity.ok(squad);
 		}else {
@@ -46,14 +46,14 @@ public class SquadController {
 	// Criar novo squad.
 	@PostMapping
 	public ResponseEntity<Squad> createSquad(@RequestBody Squad squad){
-		Squad createSquad = squadService.createSquad(squad);
+		Squad createSquad = squadService.save(squad);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createSquad);
 	}
 	
 	// Atualizar um squad.
 	@PutMapping("/{id}")
     public ResponseEntity<Squad> updateSquad(@PathVariable Long id, @RequestBody Squad squad) {
-        Squad updatedSquad = squadService.uptSquad(id, squad);
+        Squad updatedSquad = squadService.update(id, squad);
         if (updatedSquad != null) {
             return ResponseEntity.ok(updatedSquad);
         } else {
@@ -61,16 +61,25 @@ public class SquadController {
         }
     }
 	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> deleteSquad(@PathVariable Long id) {
+        squadService.deleteById(id);
+
+        return ResponseEntity.noContent().build();
+    }
+
+	/*
 	// Excluir squad existente.
 	 @DeleteMapping("/{id}")
 	    public ResponseEntity<Void> deleteSquad(@PathVariable Long id) {
-	        boolean deleted = squadService.deleteSquad(id);
+	        boolean deleted = squadService.deleteById(id);
 	        if (deleted) {
 	            return ResponseEntity.noContent().build();
 	        } else {
 	            return ResponseEntity.notFound().build();
 	        }
 	    }
+		 */
 }
 
 	

@@ -21,16 +21,16 @@ public class AssessmentController {
 
     @PostMapping
     public ResponseEntity<Assessment> createAssessment(@Valid  @RequestBody Assessment assessment) {
-        Assessment createdAssessment = assessmentService.createAssessment(assessment);
+        Assessment createdAssessment = assessmentService.save(assessment);
         return new ResponseEntity<>(createdAssessment, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Assessment> updateAssessment(@Valid @PathVariable Long id, @RequestBody Assessment assessment) {
-        Assessment existingAssessment = assessmentService.assessmentById(id);
+        Assessment existingAssessment = assessmentService.findById(id);
         if (existingAssessment != null) {
             assessment.setId(id);
-            Assessment updatedAssessment = assessmentService.updateAssessment(assessment);
+            Assessment updatedAssessment = assessmentService.update(assessment);
             return new ResponseEntity<>(updatedAssessment, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -38,7 +38,7 @@ public class AssessmentController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<Assessment> getAssessmentById(@PathVariable Long id) {
-        Assessment assessment = assessmentService.assessmentById(id);
+        Assessment assessment = assessmentService.findById(id);
         if (assessment != null) {
             return new ResponseEntity<>(assessment, HttpStatus.OK);
         } else {
@@ -47,9 +47,9 @@ public class AssessmentController {
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAssessment(@PathVariable Long id) {
-        Assessment existingAssessment = assessmentService.assessmentById(id);
+        Assessment existingAssessment = assessmentService.findById(id);
         if (existingAssessment != null) {
-            assessmentService.deleteAssessment(id);
+            assessmentService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -58,7 +58,7 @@ public class AssessmentController {
 
     @GetMapping("/all")
     public ResponseEntity<List<Assessment>> getAllAssessments() {
-        List<Assessment> assessments = assessmentService.getAllAssessments();
+        List<Assessment> assessments = assessmentService.findAll();
         return new ResponseEntity<>(assessments, HttpStatus.OK);
     }
 }

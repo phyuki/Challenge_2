@@ -56,14 +56,14 @@ public class GroupController {
 
     @DeleteMapping("/{groupId}")
     public String deleteGroupById(@PathVariable Long groupId){
-        Group checkGroup = groupService.findById(groupId);
+        //Group checkGroup = groupService.findById(groupId);
         groupService.deleteById(groupId);
         return "Deleted employee with id: "+groupId;
     }
 
     @DeleteMapping("/{groupName}")
     public String deleteGroupByName(@PathVariable String groupName){
-        Group checkGroup = groupService.findDistinctByName(groupName);
+        //Group checkGroup = groupService.findDistinctByName(groupName);
         groupService.deleteByName(groupName);
         return "Deleted employee with name: "+groupName;
     }
