@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AssessmentService {
+public class AssessmentService implements CrudService<Assessment> {
 
     private AssessmentRepository assessmentRepository;
 
@@ -17,22 +17,32 @@ public class AssessmentService {
     public AssessmentService(AssessmentRepository repository) {
         this.assessmentRepository = repository;
     }
-    public Assessment assessmentById(Long id) {
+
+    public Assessment findById(Long id) {
         Optional<Assessment> optionalAssessment = assessmentRepository.findById(id);
         return optionalAssessment.orElse(null);
     }
-    public Assessment createAssessment(Assessment assessment) {
+
+    public Assessment save(Assessment assessment) {
         return assessmentRepository.save(assessment);
     }
-    public Assessment updateAssessment(Assessment assessment) {
-        Assessment assessment1 = assessmentById(assessment.getId());
 
-        return assessment1 != null? assessmentRepository.save(assessment) : null;
+    public Assessment update(Assessment assessment) {
+        Assessment assessment1 = findById(assessment.getId());
+
+        return assessment1 != null ? assessmentRepository.save(assessment) : null;
     }
-    public void deleteAssessment(Long id) {
+
+    public void deleteById(Long id) {
         assessmentRepository.deleteById(id);
     }
-    public List<Assessment> getAllAssessments() {
+
+    public List<Assessment> findAll() {
         return assessmentRepository.findAll();
+    }
+
+    @Override
+    public void delete(Assessment assessment) {
+        assessmentRepository.delete(assessment);
     }
 }

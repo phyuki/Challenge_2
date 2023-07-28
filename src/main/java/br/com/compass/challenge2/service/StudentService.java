@@ -8,7 +8,7 @@ import br.com.compass.challenge2.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StudentService {
+public class StudentService implements CrudService<Student>{
 
     private StudentRepository studentRepository;
 

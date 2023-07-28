@@ -9,25 +9,28 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GroupService{
+public class GroupService implements CrudService<Group> {
+
     private GroupRepository groupRepository;
+
     @Autowired
     public GroupService(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
     }
 
+    @Override
     public List<Group> findAll() {
         return groupRepository.findAll();
     }
 
+    @Override
     public Group findById(Long id) {
         Optional<Group> result = groupRepository.findById(id);
         Group resultGroup = null;
-        if(result.isPresent()){
+        if (result.isPresent()) {
             resultGroup = result.get();
-        }
-        else{
-            throw new RuntimeException("Did not find any group with id: "+id);
+        } else {
+            throw new RuntimeException("Did not find any group with id: " + id);
         }
         return resultGroup;
     }
@@ -36,10 +39,26 @@ public class GroupService{
         return groupRepository.findByName(name);
     }
 
+    @Override
     public Group save(Group group) {
         return groupRepository.save(group);
     }
 
+    @Override
+    public Group update(Group group) {
+
+        if (groupRepository.existsById(group.getId()))
+            return groupRepository.save(group);
+
+        throw new IllegalArgumentException();
+    }
+
+    @Override
+    public void delete(Group group) {
+        groupRepository.delete(group);
+    }
+
+    @Override
     public void deleteById(Long id) {
         groupRepository.deleteById(id);
     }
@@ -47,4 +66,5 @@ public class GroupService{
     public Long deleteByName(String name) {
         return groupRepository.deleteByName(name);
     }
+
 }
