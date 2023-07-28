@@ -25,18 +25,14 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public Student findById() {
-        return studentRepository.findById(null).orElseThrow(NoSuchElementException::new);
-    }
-
-    public Student findOne() {
-        return studentRepository.findOne(null).orElseThrow(NoSuchElementException::new);
+    public Student findById(Long id) {
+        return studentRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
     public Student update(Student student) {
 
         if (studentRepository.existsById(student.getId()))
-            return studentRepository.save(null);
+            return studentRepository.save(student);
 
         throw new IllegalArgumentException();
     }
