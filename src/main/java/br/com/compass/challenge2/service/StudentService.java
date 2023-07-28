@@ -2,12 +2,12 @@ package br.com.compass.challenge2.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import br.com.compass.challenge2.entity.Student;
 import br.com.compass.challenge2.repository.StudentRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class StudentService {
 
     private StudentRepository studentRepository;
