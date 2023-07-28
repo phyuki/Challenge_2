@@ -54,14 +54,6 @@ public class SquadService implements CrudService<Squad> {
 
 	@Override
 	public void delete(Squad squad) {
-		/*
-		 * Squad currentSquad = squadRepository.findById(id).orElse(null);
-		 * if (currentSquad != null) {
-		 * squadRepository.delete(currentSquad);
-		 * return true;
-		 * }else
-		 * return false;
-		 */
 		squadRepository.delete(squad);
 	}
 
@@ -70,4 +62,16 @@ public class SquadService implements CrudService<Squad> {
 		squadRepository.deleteById(id);
 	}
 
+	/* 
+	public Boolean deleteById(Long id) {
+		Squad currentSquad = squadRepository.findById(id).orElse(null);
+		if (currentSquad != null) {
+			squadRepository.delete(currentSquad);
+			return true;
+		}
+
+		return false;
+
+	}
+*/
 }
