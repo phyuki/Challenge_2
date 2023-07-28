@@ -54,7 +54,7 @@ public class SquadController {
 	// Atualizar um squad.
 	@PutMapping("/{id}")
     public ResponseEntity<Squad> updateSquad(@PathVariable Long id, @RequestBody Squad squad) {
-        Squad updatedSquad = squadService.updateSquad(id, squad);
+        Squad updatedSquad = squadService.uptSquad(id, squad);
         if (updatedSquad != null) {
             return ResponseEntity.ok(updatedSquad);
         } else {

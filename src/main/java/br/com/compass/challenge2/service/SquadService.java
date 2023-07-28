@@ -30,7 +30,7 @@ public class SquadService {
 		 return squadRepository.save(squad);
 	 }
 	 
-	 public Squad updateSquad(Long id, Squad uptSquad) {
+	 public Squad uptSquad(Long id, Squad uptSquad) {
 		 Squad currentSquad = squadRepository.findById(id).orElse(null);
 		 if (currentSquad != null) {
 			 currentSquad.setSquadName(uptSquad.getSquadName());
