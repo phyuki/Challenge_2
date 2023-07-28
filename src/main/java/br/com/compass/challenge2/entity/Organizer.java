@@ -15,14 +15,42 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
+@Getter
 @Table(name = "organizers")
 @Entity
-@Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Organizer extends Person{
 
+    private Long id;
+    private String name;
+    private String email;
+
+    // Getters and setters
+
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
+    public void setProfiles(List<Role> profiles) {
+        this.profiles = profiles;
+    }
+
+    @Getter
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "organizers_groups", joinColumns = @JoinColumn(name = "organizer_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
     private List<Group> groups;
