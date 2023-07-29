@@ -4,6 +4,8 @@ import lombok.*;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -23,13 +25,14 @@ import jakarta.persistence.Table;
 @AllArgsConstructor
 public class Organizer extends Person{
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "organizers_groups", joinColumns = @JoinColumn(name = "organizer_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
     private List<Group> groups;
 
     @ElementCollection(targetClass = Role.class)
-    @JoinTable(name = "organizers_profiles", joinColumns = @JoinColumn(name = "organizer_id"))
+    @JoinTable(name = "organizers_roles", joinColumns = @JoinColumn(name = "organizer_id"))
     @Enumerated(EnumType.STRING)
-    @Column(name = "profile")
-    private List<Role> profiles;
+    @Column(name = "role")
+    private List<Role> roles;
 }
