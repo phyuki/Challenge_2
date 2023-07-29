@@ -79,8 +79,8 @@ public class GroupController {
         }
     }
 
-    /*@DeleteMapping("/{groupName}")
-    public ResponseEntity<Void>  deleteGroupByName(@PathVariable String groupName){
+    /*@DeleteMapping("/{bame}")
+    public ResponseEntity<Void>  deleteGroupByName(@PathVariable String bame){
         Group checkGroup = groupService.findDistinctByName(groupName);
         if(checkGroup == null){
             groupService.deleteById(checkGroup.getId());
