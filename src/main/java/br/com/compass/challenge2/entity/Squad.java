@@ -1,5 +1,6 @@
 package br.com.compass.challenge2.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -20,7 +21,8 @@ public class Squad {
     @Column(name = "squad_name", nullable = false)
     private String squadName;
 
-    @OneToMany(mappedBy = "squad", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "squad", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Student> students;
 
 }

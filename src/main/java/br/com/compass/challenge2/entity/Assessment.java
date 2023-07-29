@@ -1,4 +1,6 @@
 package br.com.compass.challenge2.entity;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +27,7 @@ public class Assessment {
 
     @NotNull
     @ManyToOne
+    @JsonBackReference
     private Student student;
 
     @NotBlank
