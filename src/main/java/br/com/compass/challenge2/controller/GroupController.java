@@ -37,6 +37,7 @@ public class GroupController {
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
+    /*
     @GetMapping("/{groupName}")
     public ResponseEntity<Group> findGroupByName(@PathVariable String groupName){
         Group group = groupService.findDistinctByName(groupName);
@@ -44,7 +45,7 @@ public class GroupController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(group, HttpStatus.OK);
-    }
+    }*/
 
     @PostMapping
     public ResponseEntity<Group> createGroup(@Valid @RequestBody Group postGroup){
@@ -78,6 +79,7 @@ public class GroupController {
         }
     }
 
+    /*
     @DeleteMapping("/{groupName}")
     public ResponseEntity<Void> deleteGroupByName(@PathVariable String groupName){
         Group checkGroup = groupService.findDistinctByName(groupName);
@@ -88,6 +90,6 @@ public class GroupController {
         else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
+    }*/
 
 }
