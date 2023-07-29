@@ -1,13 +1,9 @@
 package br.com.compass.challenge2.entity;
 
 import lombok.*;
-
 import java.util.List;
-
 import org.springframework.hateoas.RepresentationModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -22,13 +18,15 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.hateoas.server.core.Relation;
 
 @Getter
-@Table(name = "organizers")
-@Entity
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "organizers")
+@Relation(collectionRelation = "organizers")
 public class Organizer extends RepresentationModel<Organizer> {
 
     @Id
