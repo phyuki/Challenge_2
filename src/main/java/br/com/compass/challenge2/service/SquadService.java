@@ -2,10 +2,13 @@ package br.com.compass.challenge2.service;
 
 import br.com.compass.challenge2.entity.Squad;
 import br.com.compass.challenge2.repository.SquadRepository;
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class SquadService implements CrudService<Squad> {
@@ -41,13 +44,16 @@ public class SquadService implements CrudService<Squad> {
 	}
 
 	@Override
-	public void delete(Squad squad) {
-		squadRepository.delete(squad);
-	}
+	public Squad deleteById(Long id) {
+		Squad squad;
+		try {
+			squad = squadRepository.findById(id).get();
+			squadRepository.deleteById(id);
+		} catch (NoSuchElementException e) {
+			throw new EntityNotFoundException("Squad does not exist with id: " + id);
+		}
 
-	@Override
-	public void deleteById(Long id) {
-		squadRepository.deleteById(id);
+		return squad;
 	}
 
 	public Squad update(Long id, Squad updatedSquad) {

@@ -19,6 +19,7 @@ public class StudentService implements CrudService<Student> {
         this.studentRepository = studentRepository;
     }
 
+    @Override
     public Student save(Student student) {
         if (student.getId() == null)
             return studentRepository.save(student);
@@ -26,10 +27,12 @@ public class StudentService implements CrudService<Student> {
         throw new IllegalArgumentException("The \"id\" attribute is not allowed when creating a new user.");
     }
 
+    @Override
     public List<Student> findAll() {
         return studentRepository.findAll();
     }
 
+    @Override
     public Student findById(Long id) {
         try {
             return studentRepository.findById(id).get();
@@ -38,6 +41,7 @@ public class StudentService implements CrudService<Student> {
         }
     }
 
+    @Override
     public Student update(Student student) {
 
         if (studentRepository.existsById(student.getId()))
@@ -46,18 +50,17 @@ public class StudentService implements CrudService<Student> {
         throw new EntityNotFoundException("Student does not exist with id: " + student.getId());
     }
 
-    public void delete(Student student) {
-        studentRepository.delete(student);
-    }
-
-    public void deleteById(Long id) {
-
+    @Override
+    public Student deleteById(Long id) {
+        Student student;
         try {
-            studentRepository.findById(id).get();
+            student = studentRepository.findById(id).get();
+            studentRepository.deleteById(id);
         } catch (NoSuchElementException e) {
             throw new EntityNotFoundException("Student does not exist with id: " + id);
         }
-        studentRepository.deleteById(id);
+
+        return student;
     }
 
 }

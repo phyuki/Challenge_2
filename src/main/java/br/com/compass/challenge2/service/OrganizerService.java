@@ -2,10 +2,13 @@ package br.com.compass.challenge2.service;
 
 import br.com.compass.challenge2.entity.Organizer;
 import br.com.compass.challenge2.repository.OrganizerRepository;
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class OrganizerService implements CrudService<Organizer> {
@@ -36,13 +39,16 @@ public class OrganizerService implements CrudService<Organizer> {
         return organizerRepository.save(organizer);
     }
 
-    @Override
-    public void delete(Organizer organizer) {
-        organizerRepository.delete(organizer);
-    }
+	@Override
+	public Organizer deleteById(Long id) {
+		Organizer organizer;
+		try {
+			organizer = organizerRepository.findById(id).get();
+			organizerRepository.deleteById(id);
+		} catch (NoSuchElementException e) {
+			throw new EntityNotFoundException("Organizer does not exist with id: " + id);
+		}
 
-    @Override
-    public void deleteById(Long id) {
-        organizerRepository.deleteById(id);
-    }
+		return organizer;
+	}
 }
