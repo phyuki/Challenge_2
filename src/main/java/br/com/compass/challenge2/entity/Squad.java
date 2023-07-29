@@ -22,17 +22,5 @@ public class Squad {
 
     @OneToMany(mappedBy = "squad", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Student> students;
-    
-    public String getSquadName() {
-        return squadName;
-    }
-    public void setSquadName(String squadName) {
-        this.squadName = squadName;
-    }
-    public List<Student> getStudents() {
-        return students;
-    }
-    public void setStudents(List<Student> students) {
-        this.students = students;
-    }
+
 }

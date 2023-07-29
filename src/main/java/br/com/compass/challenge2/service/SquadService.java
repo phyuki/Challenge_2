@@ -1,17 +1,16 @@
 package br.com.compass.challenge2.service;
 
-import java.util.List;
-
+import br.com.compass.challenge2.entity.Squad;
+import br.com.compass.challenge2.repository.SquadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.compass.challenge2.entity.Squad;
-import br.com.compass.challenge2.repository.SquadRepository;
+import java.util.List;
 
 @Service
 public class SquadService implements CrudService<Squad> {
 
-	private SquadRepository squadRepository;
+	private final SquadRepository squadRepository;
 
 	@Autowired
 	public SquadService(SquadRepository squadRepository) {
@@ -35,21 +34,10 @@ public class SquadService implements CrudService<Squad> {
 
 	@Override
 	public Squad update(Squad squad) {
-		if (squadRepository.existsById(squad.getId()))
+		if (squadRepository.existsById(squad.getId())) {
 			return squadRepository.save(squad);
-
-		throw new IllegalArgumentException();
-	}
-
-	public Squad update(Long id, Squad uptSquad) {
-		Squad currentSquad = squadRepository.findById(id).orElse(null);
-		if (currentSquad != null) {
-			currentSquad.setSquadName(uptSquad.getSquadName());
-			currentSquad.setStudents(uptSquad.getStudents());
-			return squadRepository.save(currentSquad);
-
 		}
-		return null;
+		throw new IllegalArgumentException();
 	}
 
 	@Override
@@ -62,16 +50,13 @@ public class SquadService implements CrudService<Squad> {
 		squadRepository.deleteById(id);
 	}
 
-	/* 
-	public Boolean deleteById(Long id) {
+	public Squad update(Long id, Squad updatedSquad) {
 		Squad currentSquad = squadRepository.findById(id).orElse(null);
 		if (currentSquad != null) {
-			squadRepository.delete(currentSquad);
-			return true;
+			currentSquad.setSquadName(updatedSquad.getSquadName());
+			currentSquad.setStudents(updatedSquad.getStudents());
+			return squadRepository.save(currentSquad);
 		}
-
-		return false;
-
+		return null;
 	}
-*/
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class OrganizerService implements CrudService<Organizer> {
 
-    private OrganizerRepository organizerRepository;
+    private final OrganizerRepository organizerRepository;
 
     @Autowired
     public OrganizerService(OrganizerRepository organizerRepository) {
@@ -29,9 +29,8 @@ public class OrganizerService implements CrudService<Organizer> {
 
     @Override
     public Organizer save(Organizer organizer) {
-        return null; // implementar
+        return organizerRepository.save(organizer);
     }
-
     @Override
     public Organizer update(Organizer organizer) {
         return organizerRepository.save(organizer);

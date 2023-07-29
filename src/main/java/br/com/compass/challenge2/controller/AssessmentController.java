@@ -37,7 +37,7 @@ public class AssessmentController {
         }
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Assessment> getAssessmentById(@PathVariable Long id) {
+    public ResponseEntity<Assessment> findAssessmentById(@PathVariable Long id) {
         Assessment assessment = assessmentService.findById(id);
         if (assessment != null) {
             return new ResponseEntity<>(assessment, HttpStatus.OK);
@@ -57,7 +57,7 @@ public class AssessmentController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Assessment>> getAllAssessments() {
+    public ResponseEntity<List<Assessment>> findAllAssessments() {
         List<Assessment> assessments = assessmentService.findAll();
         return new ResponseEntity<>(assessments, HttpStatus.OK);
     }

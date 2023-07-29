@@ -2,6 +2,7 @@ package br.com.compass.challenge2.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,21 +21,20 @@ import br.com.compass.challenge2.service.SquadService;
 @RequestMapping("/squad")
 public class SquadController {
 	private final SquadService squadService;
-	
+
+	@Autowired
 	public SquadController(SquadService squadService) {
         this.squadService = squadService;
     }
-		
-	// Mostrar todos squads.
-	@GetMapping("/squads")
-	public ResponseEntity<List<Squad>> getAllSquads(){
+
+	@GetMapping("/all")
+	public ResponseEntity<List<Squad>> findAllSquads(){
 		List<Squad> squads = squadService.findAll();
 		return ResponseEntity.ok(squads);		
 	}
 		
-	// Mostrar um squad específico pelo id.
 	@GetMapping("/{id}")
-	public ResponseEntity<Squad> getSquadById(@PathVariable Long id){
+	public ResponseEntity<Squad> findSquadById(@PathVariable Long id){
 		Squad squad = squadService.findById(id);
 		if (squad != null) {
 			return ResponseEntity.ok(squad);
@@ -43,14 +43,12 @@ public class SquadController {
 		}
 	}
 	
-	// Criar novo squad.
 	@PostMapping
 	public ResponseEntity<Squad> createSquad(@RequestBody Squad squad){
 		Squad createSquad = squadService.save(squad);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createSquad);
 	}
 	
-	// Atualizar um squad.
 	@PutMapping("/{id}")
     public ResponseEntity<Squad> updateSquad(@PathVariable Long id, @RequestBody Squad squad) {
         Squad updatedSquad = squadService.update(id, squad);
@@ -64,22 +62,8 @@ public class SquadController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteSquad(@PathVariable Long id) {
         squadService.deleteById(id);
-
         return ResponseEntity.noContent().build();
     }
-
-	/*
-	// Excluir squad existente.
-	 @DeleteMapping("/{id}")
-	    public ResponseEntity<Void> deleteSquad(@PathVariable Long id) {
-	        boolean deleted = squadService.deleteById(id);
-	        if (deleted) {
-	            return ResponseEntity.noContent().build();
-	        } else {
-	            return ResponseEntity.notFound().build();
-	        }
-	    }
-		 */
 }
 
 	

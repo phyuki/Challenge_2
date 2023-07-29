@@ -6,13 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class GroupService implements CrudService<Group> {
 
-    private GroupRepository groupRepository;
+    private final GroupRepository groupRepository;
 
     @Autowired
     public GroupService(GroupRepository groupRepository) {
@@ -20,17 +18,13 @@ public class GroupService implements CrudService<Group> {
     }
 
     @Override
-    public List<Group> findAll() {
-        return groupRepository.findAll();
+    public Group findById(Long id) {
+        return groupRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Group findById(Long id) {
-        return groupRepository.findById(id).orElseThrow(NoSuchElementException::new);
-    }
-
-    public Group findDistinctByName(String name) {
-        return groupRepository.findByName(name);
+    public List<Group> findAll() {
+        return groupRepository.findAll();
     }
 
     @Override
@@ -40,11 +34,11 @@ public class GroupService implements CrudService<Group> {
 
     @Override
     public Group update(Group group) {
-
-        if (groupRepository.existsById(group.getId()))
+        if (groupRepository.existsById(group.getId())) {
             return groupRepository.save(group);
-
-        throw new IllegalArgumentException();
+        } else {
+            throw new IllegalArgumentException("Group with id " + group.getId() + " not found.");
+        }
     }
 
     @Override
@@ -57,8 +51,11 @@ public class GroupService implements CrudService<Group> {
         groupRepository.deleteById(id);
     }
 
+    public Group findDistinctByName(String name) {
+        return groupRepository.findByName(name);
+    }
+
     public Long deleteByName(String name) {
         return groupRepository.deleteByName(name);
     }
-
 }

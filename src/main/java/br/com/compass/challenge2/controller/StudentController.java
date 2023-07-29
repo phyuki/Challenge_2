@@ -2,6 +2,8 @@ package br.com.compass.challenge2.controller;
 
 import java.util.List;
 
+import br.com.compass.challenge2.converter.Converter;
+import br.com.compass.challenge2.dto.StudentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +32,10 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(@Valid @RequestBody Student student) {
-        Student createdStudent = studentService.save(student);
+    public ResponseEntity<Student> createStudent(@Valid @RequestBody StudentDTO student) {
+        Student student1 = Converter.convert(student, Student.class);
+
+        Student createdStudent = studentService.save(student1);
         return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
     }
 

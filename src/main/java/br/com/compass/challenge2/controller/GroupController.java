@@ -28,24 +28,24 @@ public class GroupController {
         return new ResponseEntity<>(groups, HttpStatus.OK);
     }
 
-    @GetMapping("/{groupId}")
-    public ResponseEntity<Group> findGroupById(@PathVariable Long groupId){
-        Group group = groupService.findById(groupId);
+    @GetMapping("/{id}")
+    public ResponseEntity<Group> findGroupById(@PathVariable Long id){
+        Group group = groupService.findById(id);
         if(group == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
-    /*
-    @GetMapping("/{groupName}")
-    public ResponseEntity<Group> findGroupByName(@PathVariable String groupName){
-        Group group = groupService.findDistinctByName(groupName);
+
+    @GetMapping("/{name}")
+    public ResponseEntity<Group> findGroupByName(@PathVariable String name){
+        Group group = groupService.findDistinctByName(name);
         if(group == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(group, HttpStatus.OK);
-    }*/
+    }
 
     @PostMapping
     public ResponseEntity<Group> createGroup(@Valid @RequestBody Group postGroup){
@@ -67,11 +67,11 @@ public class GroupController {
         }
     }
 
-    @DeleteMapping("/{groupId}")
-    public ResponseEntity<Void> deleteGroupById(@PathVariable Long groupId){
-        Group checkGroup = groupService.findById(groupId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGroupById(@PathVariable Long id){
+        Group checkGroup = groupService.findById(id);
         if(checkGroup != null){
-            groupService.deleteById(groupId);
+            groupService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         else{
@@ -79,17 +79,17 @@ public class GroupController {
         }
     }
 
-    /*
+
     @DeleteMapping("/{groupName}")
-    public ResponseEntity<Void> deleteGroupByName(@PathVariable String groupName){
+    public ResponseEntity<Void>  deleteGroupByName(@PathVariable String groupName){
         Group checkGroup = groupService.findDistinctByName(groupName);
-        if(checkGroup != null){
-            groupService.deleteByName(groupName);
+        if(checkGroup == null){
+            groupService.deleteById(checkGroup.getId());
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }*/
+
+    }
 
 }
