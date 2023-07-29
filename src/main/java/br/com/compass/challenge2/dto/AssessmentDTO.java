@@ -1,4 +1,4 @@
-package br.com.compass.challenge2.DTO;
+package br.com.compass.challenge2.dto;
 
 import lombok.*;
 

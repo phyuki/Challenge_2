@@ -1,5 +1,5 @@
 package br.com.compass.challenge2.controller;
-import br.com.compass.challenge2.DTO.AssessmentDTO;
+import br.com.compass.challenge2.dto.AssessmentDTO;
 import br.com.compass.challenge2.entity.Assessment;
 import br.com.compass.challenge2.entity.Student;
 import br.com.compass.challenge2.service.AssessmentService;
@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @RestController
-@RequestMapping("/assessments")
+@RequestMapping("/api/assessments")
 public class AssessmentController {
     private final AssessmentService assessmentService;
     private final StudentService studentService;
