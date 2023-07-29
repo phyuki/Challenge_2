@@ -1,5 +1,7 @@
 package br.com.compass.challenge2.controller;
 
+import br.com.compass.challenge2.converter.Converter;
+import br.com.compass.challenge2.dto.OrganizerDTO;
 import br.com.compass.challenge2.entity.Organizer;
 import br.com.compass.challenge2.service.OrganizerService;
 import jakarta.validation.Valid;
@@ -21,8 +23,8 @@ public class OrganizerController {
     }
 
     @PostMapping
-    public ResponseEntity<Organizer> createOrganizer(@Valid @RequestBody Organizer organizer) {
-        Organizer createdOrganizer = organizerService.save(organizer);
+    public ResponseEntity<Organizer> createOrganizer(@RequestBody OrganizerDTO organizer) {
+        Organizer createdOrganizer = organizerService.save(Converter.convertDtoToEntity(organizer, Organizer.class));
         return new ResponseEntity<>(createdOrganizer, HttpStatus.CREATED);
     }
 

@@ -23,10 +23,6 @@ import jakarta.persistence.Table;
 @AllArgsConstructor
 public class Organizer extends Person{
 
-    private Long id;
-    private String name;
-    private String email;
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "organizers_groups", joinColumns = @JoinColumn(name = "organizer_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
     private List<Group> groups;

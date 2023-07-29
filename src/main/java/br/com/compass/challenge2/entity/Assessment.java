@@ -1,5 +1,4 @@
 package br.com.compass.challenge2.entity;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

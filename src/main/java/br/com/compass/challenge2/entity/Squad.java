@@ -20,7 +20,7 @@ public class Squad {
     @Column(name = "squad_name", nullable = false)
     private String squadName;
 
-    @OneToMany(mappedBy = "squad", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "squad", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Student> students;
 
 }

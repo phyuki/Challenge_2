@@ -20,7 +20,7 @@ public class Group {
     @Column(name = "group_name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Student> students;
 
     @ManyToMany(mappedBy = "groups")
