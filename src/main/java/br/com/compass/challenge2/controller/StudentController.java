@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.compass.challenge2.entity.Student;
 import br.com.compass.challenge2.service.StudentService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 @RestController
@@ -32,13 +31,7 @@ public class StudentController {
 
     @PostMapping
     public ResponseEntity<Student> createStudent(@Valid @RequestBody Student student) {
-        Student createdStudent;
-
-        try {
-            createdStudent = studentService.save(student);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+        Student createdStudent = studentService.save(student);
 
         return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
     }
@@ -46,18 +39,13 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<List<Student>> findAllStudents() {
         List<Student> students = studentService.findAll();
+
         return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Student> findStudentById(@PathVariable Long id) {
-        Student student;
-
-        try {
-            student = studentService.findById(id);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Student student = studentService.findById(id);
 
         return new ResponseEntity<>(student, HttpStatus.OK);
     }
@@ -66,25 +54,14 @@ public class StudentController {
     public ResponseEntity<Student> updateStudent(@Valid @PathVariable Long id,
             @RequestBody Student student) {
         student.setId(id);
-        Student updatedStudent;
+        Student updatedStudent = studentService.update(student);
 
-        try {
-            updatedStudent = studentService.update(student);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        studentService.update(student);
         return new ResponseEntity<>(updatedStudent, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
-        try {
-            studentService.deleteById(id);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        studentService.deleteById(id);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
