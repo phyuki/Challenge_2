@@ -5,10 +5,12 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import br.com.compass.challenge2.entity.Student;
 import br.com.compass.challenge2.repository.StudentRepository;
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.stereotype.Service;
 
 @Service
-public class StudentService implements CrudService<Student>{
+public class StudentService implements CrudService<Student> {
 
     private StudentRepository studentRepository;
 
@@ -18,7 +20,10 @@ public class StudentService implements CrudService<Student>{
     }
 
     public Student save(Student student) {
-        return studentRepository.save(student);
+        if (student.getId() == null)
+            return studentRepository.save(student);
+
+        throw new IllegalArgumentException("The \"id\" attribute is not allowed when creating a new user.");
     }
 
     public List<Student> findAll() {
@@ -26,7 +31,11 @@ public class StudentService implements CrudService<Student>{
     }
 
     public Student findById(Long id) {
-        return studentRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        try {
+            return studentRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            throw new EntityNotFoundException("Student does not exist with id: " + id);
+        }
     }
 
     public Student update(Student student) {
@@ -34,7 +43,7 @@ public class StudentService implements CrudService<Student>{
         if (studentRepository.existsById(student.getId()))
             return studentRepository.save(student);
 
-        throw new IllegalArgumentException();
+        throw new EntityNotFoundException("Student does not exist with id: " + student.getId());
     }
 
     public void delete(Student student) {
@@ -42,6 +51,12 @@ public class StudentService implements CrudService<Student>{
     }
 
     public void deleteById(Long id) {
+
+        try {
+            studentRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            throw new EntityNotFoundException("Student does not exist with id: " + id);
+        }
         studentRepository.deleteById(id);
     }
 
