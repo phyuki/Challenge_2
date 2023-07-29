@@ -11,13 +11,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import br.com.compass.challenge2.entity.Student;
 import br.com.compass.challenge2.service.StudentService;
 import jakarta.validation.Valid;
-
 @RestController
-@RequestMapping("/student")
+@RequestMapping("/students")
 public class StudentController {
 
     private final StudentService studentService;
@@ -30,38 +28,36 @@ public class StudentController {
     @PostMapping
     public ResponseEntity<Student> createStudent(@Valid @RequestBody Student student) {
         Student createdStudent = studentService.save(student);
-        return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Student>> findAllStudents() {
+    @GetMapping
+    public ResponseEntity<List<Student>> getAllStudents() {
         List<Student> students = studentService.findAll();
-        return new ResponseEntity<>(students, HttpStatus.OK);
+        return ResponseEntity.ok(students);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> findStudentById(@PathVariable Long id) {
+    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
         Student student = studentService.findById(id);
 
         if (student != null) {
-            return new ResponseEntity<>(student, HttpStatus.OK);
+            return ResponseEntity.ok(student);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@Valid @PathVariable Long id,
-            @RequestBody Student student) {
-
+    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student student) {
         Student existingStudent = studentService.findById(id);
 
-        if (student != null) {
+        if (existingStudent != null) {
             student.setId(id);
-            Student updatedStudent = studentService.update(existingStudent);
-            return new ResponseEntity<>(updatedStudent, HttpStatus.OK);
+            Student updatedStudent = studentService.update(student);
+            return ResponseEntity.ok(updatedStudent);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -71,11 +67,9 @@ public class StudentController {
 
         if (existingStudent != null) {
             studentService.deleteById(id);
-
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.noContent().build();
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.notFound().build();
         }
     }
-
 }

@@ -16,57 +16,51 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.compass.challenge2.entity.Squad;
 import br.com.compass.challenge2.service.SquadService;
-
 @RestController
-@RequestMapping("/squad")
+@RequestMapping("/squads")
 public class SquadController {
 	private final SquadService squadService;
 
 	@Autowired
 	public SquadController(SquadService squadService) {
-        this.squadService = squadService;
-    }
-
-	@GetMapping("/all")
-	public ResponseEntity<List<Squad>> findAllSquads(){
-		List<Squad> squads = squadService.findAll();
-		return ResponseEntity.ok(squads);		
+		this.squadService = squadService;
 	}
-		
+
+	@GetMapping
+	public ResponseEntity<List<Squad>> getAllSquads() {
+		List<Squad> squads = squadService.findAll();
+		return ResponseEntity.ok(squads);
+	}
+
 	@GetMapping("/{id}")
-	public ResponseEntity<Squad> findSquadById(@PathVariable Long id){
+	public ResponseEntity<Squad> getSquadById(@PathVariable Long id) {
 		Squad squad = squadService.findById(id);
 		if (squad != null) {
 			return ResponseEntity.ok(squad);
-		}else {
+		} else {
 			return ResponseEntity.notFound().build();
 		}
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Squad> createSquad(@RequestBody Squad squad){
-		Squad createSquad = squadService.save(squad);
-		return ResponseEntity.status(HttpStatus.CREATED).body(createSquad);
+	public ResponseEntity<Squad> createSquad(@RequestBody Squad squad) {
+		Squad createdSquad = squadService.save(squad);
+		return ResponseEntity.status(HttpStatus.CREATED).body(createdSquad);
 	}
-	
+
 	@PutMapping("/{id}")
-    public ResponseEntity<Squad> updateSquad(@PathVariable Long id, @RequestBody Squad squad) {
-        Squad updatedSquad = squadService.update(id, squad);
-        if (updatedSquad != null) {
-            return ResponseEntity.ok(updatedSquad);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-	
+	public ResponseEntity<Squad> updateSquad(@PathVariable Long id, @RequestBody Squad squad) {
+		Squad updatedSquad = squadService.update(id, squad);
+		if (updatedSquad != null) {
+			return ResponseEntity.ok(updatedSquad);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteSquad(@PathVariable Long id) {
-        squadService.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
+		squadService.deleteById(id);
+		return ResponseEntity.noContent().build();
+	}
 }
-
-	
-	
-
-

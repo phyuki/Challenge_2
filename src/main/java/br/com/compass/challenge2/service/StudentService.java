@@ -26,7 +26,7 @@ public class StudentService implements CrudService<Student>{
     }
 
     public Student findById(Long id) {
-        return studentRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        return studentRepository.findById(id).orElse(null);
     }
 
     public Student update(Student student) {

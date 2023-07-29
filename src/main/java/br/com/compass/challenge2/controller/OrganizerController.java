@@ -10,9 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
-@RequestMapping("/organizer")
+@RequestMapping("/organizers")
 public class OrganizerController {
     private final OrganizerService organizerService;
 
@@ -23,7 +22,7 @@ public class OrganizerController {
 
     @PostMapping
     public ResponseEntity<Organizer> createOrganizer(@RequestBody Organizer organizer) {
-        Organizer createdOrganizer = organizerService.save(Converter.convertDtoToEntity(organizer, Organizer.class));
+        Organizer createdOrganizer = organizerService.save(organizer);
         return new ResponseEntity<>(createdOrganizer, HttpStatus.CREATED);
     }
 
@@ -60,9 +59,13 @@ public class OrganizerController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<Organizer>> getAllOrganizers() {
         List<Organizer> organizers = organizerService.findAll();
-        return new ResponseEntity<>(organizers, HttpStatus.OK);
+        if (organizers.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(organizers, HttpStatus.OK);
+        }
     }
 }
