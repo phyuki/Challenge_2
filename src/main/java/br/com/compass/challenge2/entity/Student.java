@@ -1,7 +1,7 @@
 package br.com.compass.challenge2.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -15,14 +15,14 @@ import java.util.List;
 public class Student extends Person {
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIgnore
     private Group group;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIgnore
     private Squad squad;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnore
     private List<Assessment> assessments;
 }
