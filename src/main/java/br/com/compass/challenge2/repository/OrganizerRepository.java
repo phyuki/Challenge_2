@@ -27,7 +27,7 @@ public interface OrganizerRepository extends JpaRepository<Organizer, Long> {
     List<Organizer> findByRole(@Param("role") Role role);
 
     // Método para pesquisar organizadores e ordenar pelo nome
-    List<Organizer> findAllByOrderBynameAsc();
+    List<Organizer> findAllByOrderByNameAsc();
 
     // Método para pesquisar organizadores e ordenar pelo email
     List<Organizer> findAllByOrderByEmailAsc();
@@ -35,5 +35,4 @@ public interface OrganizerRepository extends JpaRepository<Organizer, Long> {
     // Método para pesquisar organizadores e ordenar pelo ID
     List<Organizer> findAllByOrderByIdAsc();
 
-    List<Organizer> findAllByOrderByNameAsc();
 }

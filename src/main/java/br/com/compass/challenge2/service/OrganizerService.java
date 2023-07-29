@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class OrganizerService implements CrudService<Organizer> {
@@ -39,7 +40,6 @@ public class OrganizerService implements CrudService<Organizer> {
         return organizerRepository.save(organizer);
     }
 
-    @Override
     public Organizer update(Long id, Organizer updatedOrganizer) {
         Organizer existingOrganizer = findById(id);
         existingOrganizer.setName(updatedOrganizer.getName());
@@ -50,13 +50,19 @@ public class OrganizerService implements CrudService<Organizer> {
         return organizerRepository.save(existingOrganizer);
     }
 
-    @Override
-    public void deleteById(Long id) {
-        if (!organizerRepository.existsById(id)) {
-            throw new EntityNotFoundException("Organizer not found with id: " + id);
-        }
-        organizerRepository.deleteById(id);
-    }
+    
+	@Override
+	public Organizer deleteById(Long id) {
+		Organizer organizer;
+		try {
+			organizer = organizerRepository.findById(id).get();
+			organizerRepository.deleteById(id);
+		} catch (NoSuchElementException e) {
+			throw new EntityNotFoundException("Organizer does not exist with id: " + id);
+		}
+
+		return organizer;
+	}
 
     // Métodos de pesquisa e filtragem
 
