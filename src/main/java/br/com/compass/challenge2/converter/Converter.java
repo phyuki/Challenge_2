@@ -15,8 +15,13 @@ public class Converter {
         // Configurar o ModelMapper para não criar instâncias durante o mapeamento
         this.modelMapper.getConfiguration().setSkipNullEnabled(true);
     }
-    public static <T> T convert(Object dto, Class<T> entityClass) {
+    public static <T> T convertDtoToEntity(Object dto, Class<T> entityClass) {
         return modelMapper.map(dto, entityClass);
     }
+
+    public static <T> T convertEntityToDto(Object entity, Class<T> dtoClass) {
+        return modelMapper.map(entity, dtoClass);
+    }
+
 }
 

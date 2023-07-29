@@ -33,7 +33,7 @@ public class StudentController {
 
     @PostMapping
     public ResponseEntity<Student> createStudent(@Valid @RequestBody StudentDTO student) {
-        Student student1 = Converter.convert(student, Student.class);
+        Student student1 = Converter.convertDtoToEntity(student, Student.class);
 
         Student createdStudent = studentService.save(student1);
         return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
