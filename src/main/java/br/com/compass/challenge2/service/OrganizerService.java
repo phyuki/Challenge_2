@@ -4,7 +4,6 @@ import br.com.compass.challenge2.entity.Organizer;
 import br.com.compass.challenge2.entity.Role;
 import br.com.compass.challenge2.repository.OrganizerRepository;
 import jakarta.persistence.EntityNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,19 +19,46 @@ public class OrganizerService implements CrudService<Organizer> {
         this.organizerRepository = organizerRepository;
     }
 
+    @Override
     public List<Organizer> findAll() {
         return organizerRepository.findAll();
     }
 
+    @Override
     public Organizer findById(Long id) {
-        return organizerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Organizer not found with id: " + id));
+        return organizerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Organizer not found with id: " + id));
     }
 
     @Override
     public Organizer update(Organizer entity) {
         return null;
     }
+
+    @Override
+    public Organizer save(Organizer organizer) {
+        return organizerRepository.save(organizer);
+    }
+
+    @Override
+    public Organizer update(Long id, Organizer updatedOrganizer) {
+        Organizer existingOrganizer = findById(id);
+        existingOrganizer.setName(updatedOrganizer.getName());
+        existingOrganizer.setEmail(updatedOrganizer.getEmail());
+        existingOrganizer.setGroups(updatedOrganizer.getGroups());
+        existingOrganizer.setRoles(updatedOrganizer.getRoles());
+
+        return organizerRepository.save(existingOrganizer);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        if (!organizerRepository.existsById(id)) {
+            throw new EntityNotFoundException("Organizer not found with id: " + id);
+        }
+        organizerRepository.deleteById(id);
+    }
+
+    // Métodos de pesquisa e filtragem
 
     public List<Organizer> findByNameContainingIgnoreCase(String name) {
         return organizerRepository.findByNameContainingIgnoreCase(name);
@@ -60,26 +86,5 @@ public class OrganizerService implements CrudService<Organizer> {
 
     public List<Organizer> findAllByOrderByIdAsc() {
         return organizerRepository.findAllByOrderByIdAsc();
-    }
-
-    public Organizer save(Organizer organizer) {
-        return organizerRepository.save(organizer);
-    }
-
-    public Organizer update(Long id, Organizer updatedOrganizer) {
-        Organizer existingOrganizer = findById(id);
-        existingOrganizer.setName(updatedOrganizer.getName());
-        existingOrganizer.setEmail(updatedOrganizer.getEmail());
-        existingOrganizer.setGroups(updatedOrganizer.getGroups());
-        existingOrganizer.setRoles(updatedOrganizer.getRoles());
-        return organizerRepository.save(existingOrganizer);
-    }
-
-    public Organizer deleteById(Long id) {
-        if (!organizerRepository.existsById(id)) {
-            throw new EntityNotFoundException("Organizer not found with id: " + id);
-        }
-        organizerRepository.deleteById(id);
-        return null;
     }
 }
