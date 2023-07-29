@@ -1,5 +1,7 @@
 package br.com.compass.challenge2.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +15,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import br.com.compass.challenge2.entity.Student;
 import br.com.compass.challenge2.service.StudentService;
 import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/students")
 public class StudentController {
@@ -30,6 +34,12 @@ public class StudentController {
     @PostMapping
     public ResponseEntity<Student> createStudent(@Valid @RequestBody Student student) {
         Student createdStudent = studentService.save(student);
+        createdStudent.add(
+                linkTo(methodOn(StudentController.class).findStudentById(createdStudent.getId())).withSelfRel(),
+                linkTo(methodOn(StudentController.class).updateStudent(createdStudent.getId(), student))
+                        .withRel("update"),
+                linkTo(methodOn(StudentController.class).deleteStudent(createdStudent.getId())).withRel("delete"),
+                linkTo(methodOn(StudentController.class).findAllStudents()).withRel("all_students"));
 
         return new ResponseEntity<>(createdStudent, HttpStatus.CREATED);
     }
@@ -38,12 +48,22 @@ public class StudentController {
     public ResponseEntity<List<Student>> findAllStudents() {
         List<Student> students = studentService.findAll();
 
+        students.stream().map(student -> student.add(
+                linkTo(methodOn(StudentController.class).findStudentById(student.getId())).withSelfRel(),
+                linkTo(methodOn(StudentController.class).updateStudent(student.getId(), student))
+                        .withRel("update"),
+                linkTo(methodOn(StudentController.class).deleteStudent(student.getId())).withRel("delete"))).toList();
+
         return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
+    public ResponseEntity<Student> findStudentById(@PathVariable Long id) {
         Student student = studentService.findById(id);
+        student.add(linkTo(methodOn(StudentController.class).findStudentById(id)).withSelfRel(),
+                linkTo(methodOn(StudentController.class).updateStudent(id, student)).withRel("update"),
+                linkTo(methodOn(StudentController.class).deleteStudent(id)).withRel("delete"),
+                linkTo(methodOn(StudentController.class).findAllStudents()).withRel("all_students"));
 
         return new ResponseEntity<>(student, HttpStatus.OK);
     }
@@ -53,14 +73,17 @@ public class StudentController {
             @RequestBody Student student) {
         student.setId(id);
         Student updatedStudent = studentService.update(student);
+        updatedStudent.add(linkTo(methodOn(StudentController.class).findStudentById(id)).withSelfRel(),
+                linkTo(methodOn(StudentController.class).findAllStudents()).withRel("all_students"));
 
         return new ResponseEntity<>(updatedStudent, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
-        studentService.deleteById(id);
+    public ResponseEntity<Student> deleteStudent(@PathVariable Long id) {
+        Student deletedStudent = studentService.deleteById(id);
+        deletedStudent.add(linkTo(methodOn(StudentController.class).findAllStudents()).withRel("all_students"));
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(deletedStudent, HttpStatus.OK);
     }
 }
