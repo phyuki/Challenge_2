@@ -5,13 +5,15 @@ import lombok.*;
 
 import java.util.List;
 
+import org.springframework.hateoas.RepresentationModel;
+
 @Table(name = "pb_groups")
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Group {
+public class Group extends RepresentationModel<Group> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +22,7 @@ public class Group {
     @Column(name = "group_name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Student> students;
 
     @ManyToMany(mappedBy = "groups")

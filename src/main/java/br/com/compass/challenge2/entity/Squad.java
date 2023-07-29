@@ -4,13 +4,15 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
 
+import org.springframework.hateoas.RepresentationModel;
+
 @Table(name = "squads")
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Squad {
+public class Squad extends RepresentationModel<Squad> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

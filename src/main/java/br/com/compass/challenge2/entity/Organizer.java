@@ -4,6 +4,8 @@ import lombok.*;
 
 import java.util.List;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -12,10 +14,14 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 @Getter
 @Table(name = "organizers")
@@ -23,7 +29,20 @@ import jakarta.persistence.Table;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Organizer extends Person{
+public class Organizer extends RepresentationModel<Organizer> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true)
+    private Long id;
+
+    @NotBlank
+    @Column(nullable = false)
+    private String name;
+
+    @NotBlank
+    @Column(nullable = false)
+    private String email;
 
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
