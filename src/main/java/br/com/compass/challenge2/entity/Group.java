@@ -33,6 +33,6 @@ public class Group extends RepresentationModel<Group> {
     private List<Student> students;
 
     @ManyToMany(mappedBy = "groups", fetch = FetchType.EAGER)
-    private Set<Organizer> organizers;
+    private List<Organizer> organizers;
 
 }
