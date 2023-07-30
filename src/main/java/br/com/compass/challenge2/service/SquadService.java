@@ -4,6 +4,7 @@ import br.com.compass.challenge2.entity.Squad;
 import br.com.compass.challenge2.repository.SquadRepository;
 import jakarta.persistence.EntityNotFoundException;
 
+import org.modelmapper.internal.bytebuddy.asm.Advice.OffsetMapping.Sort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class SquadService implements CrudService<Squad> {
 
 	@Override
 	public Squad findById(Long id) {
-		return squadRepository.findById(id).orElse(null);
+		return squadRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Squad does not exist with id:" + id));
 	}
 
 	@Override
@@ -40,20 +41,20 @@ public class SquadService implements CrudService<Squad> {
 		if (squadRepository.existsById(squad.getId())) {
 			return squadRepository.save(squad);
 		}
-		throw new IllegalArgumentException();
+		throw new IllegalArgumentException("Squad with Id:" + squad.getId() + "not found.");
 	}
 
 	@Override
 	public Squad deleteById(Long id) {
-		Squad squad;
-		try {
-			squad = squadRepository.findById(id).get();
-			squadRepository.deleteById(id);
-		} catch (NoSuchElementException e) {
-			throw new EntityNotFoundException("Squad does not exist with id: " + id);
-		}
-
-		return squad;
+        Squad squad;
+        try {
+            squad = squadRepository.findById(id).get();
+            squadRepository.deleteById(id);
+        } catch (NoSuchElementException e) {
+            throw new EntityNotFoundException("Squad does not exist with id: " + id);
+        }
+        return squad;
+    
 	}
 
 	public Squad update(Long id, Squad updatedSquad) {
@@ -65,4 +66,22 @@ public class SquadService implements CrudService<Squad> {
 		}
 		return null;
 	}
+	
+	 public List<Squad> findBySquadNameContainingIgnoreCase(String squadName) {
+	        return squadRepository.findBySquadNameContainingIgnoreCase(squadName);
+	    }
+
+      public List<Squad> findByOrganizerNameContainingIgnoreCase(String organizerName) {
+	        return squadRepository.findByOrganizerNameContainingIgnoreCase(organizerName);
+	    }
+    
+    
+
+	 
+	    
+	    
+	
+
+
+	
 }
