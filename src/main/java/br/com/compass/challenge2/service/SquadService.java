@@ -4,7 +4,6 @@ import br.com.compass.challenge2.entity.Squad;
 import br.com.compass.challenge2.repository.SquadRepository;
 import jakarta.persistence.EntityNotFoundException;
 
-import org.modelmapper.internal.bytebuddy.asm.Advice.OffsetMapping.Sort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

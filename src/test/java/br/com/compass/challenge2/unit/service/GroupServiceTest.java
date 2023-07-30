@@ -1,19 +1,15 @@
-package br.com.compass.challenge2.service;
+package br.com.compass.challenge2.unit.service;
 
 import br.com.compass.challenge2.entity.Group;
 import br.com.compass.challenge2.entity.Organizer;
 import br.com.compass.challenge2.entity.Student;
-import br.com.compass.challenge2.repository.GroupRepository;
-import br.com.compass.challenge2.repository.OrganizerRepository;
-import org.junit.jupiter.api.BeforeEach;
+import br.com.compass.challenge2.service.GroupService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
