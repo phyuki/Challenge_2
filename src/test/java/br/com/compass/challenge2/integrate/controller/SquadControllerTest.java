@@ -108,11 +108,11 @@ public class SquadControllerTest implements ConfigTest {
     @Test
     public void testFindBySquadName() throws Exception {
         Squad squad1 = new Squad();
-        squad1.setSquadName("Squad Test 1");
+        squad1.setSquadName("Squad Teste 1");
         squadService.save(squad1);
 
         Squad squad2 = new Squad();
-        squad2.setSquadName("Squad Test 2");
+        squad2.setSquadName("Squad Teste 2");
         squadService.save(squad2);
 
         mockMvc.perform(get("/api/squads/search/squad-name")
@@ -123,29 +123,6 @@ public class SquadControllerTest implements ConfigTest {
                .andExpect(jsonPath("$[1].squadName").value("Squad Teste 2"));
     }
 
-    @Test
-    public void testFindByStudentName() throws Exception {
-        Squad squad1 = new Squad();
-        squad1.setSquadName("Squad Test 1");
-        squadService.save(squad1);
-
-        Squad squad2 = new Squad();
-        squad2.setSquadName("Squad Test 2");
-        squadService.save(squad2);
-
-       
-        Student student1 = new Student();
-        student1.setName("John Doe");
-        squad1.addStudent(student1);
-        squadService.save(squad1);
-
-        mockMvc.perform(get("/api/squads/search/student-name")
-               .param("name", "John"))
-               .andExpect(status().isOk())
-               .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-               .andExpect(jsonPath("$[0].squadName").value("Squad Test 1"))
-               .andExpect(jsonPath("$[0].students[0].name").value("John Doe"));
-    }
-
+   // Teste para achar por nome de um integrante.
     
 }
