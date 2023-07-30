@@ -28,6 +28,6 @@ public class Group extends RepresentationModel<Group> {
     private List<Student> students;
 
     @ManyToMany(mappedBy = "groups")
-    private Set<Organizer> organizers = new HashSet<Organizer>();
+    private List<Organizer> organizers;
 
 }

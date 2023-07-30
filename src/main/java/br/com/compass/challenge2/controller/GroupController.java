@@ -1,6 +1,7 @@
 package br.com.compass.challenge2.controller;
 
 import br.com.compass.challenge2.entity.Group;
+import br.com.compass.challenge2.entity.Organizer;
 import br.com.compass.challenge2.service.GroupService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,10 +79,11 @@ public class GroupController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Group> deleteGroupById(@PathVariable Long id) {
+        Group group = groupService.findById(id);
+        System.out.println("Organizers: "+group.getOrganizers().get(0).getName());
+
         Group deletedGroup = groupService.deleteById(id);
-        System.out.println("Deleted group: "+deletedGroup.getName());
         deletedGroup.add(linkTo(methodOn(GroupController.class).findAllGroups()).withRel("all_groups"));
-        System.out.println("Organizers: "+deletedGroup.getOrganizers());
         return new ResponseEntity<>(deletedGroup, HttpStatus.OK);
     }
 }
