@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-class GroupServiceTest implements ConfigTest {
+public class GroupServiceTest implements ConfigTest {
 
     private GroupService groupService;
     @MockBean
@@ -36,7 +36,7 @@ class GroupServiceTest implements ConfigTest {
         group = Group.builder()
                 .id(1L)
                 .name("Spring Boot")
-                .organizers(new HashSet<>())
+                .organizers(new ArrayList<>())
                 .students(new ArrayList<>())
                 .build();
     }
@@ -64,14 +64,14 @@ class GroupServiceTest implements ConfigTest {
         Organizer org1 = new Organizer();
         org1.setName("Renan");
         org1.setEmail("renan@email.com");
-        org1.setGroups(new HashSet<Group>());
+        org1.setGroups(new ArrayList<Group>());
 
         Organizer org2 = new Organizer();
         org2.setName("Maria");
         org2.setEmail("maria@email.com");
-        org2.setGroups(new HashSet<Group>());
+        org2.setGroups(new ArrayList<Group>());
 
-        Set<Organizer> orgs = new HashSet<>();
+        List<Organizer> orgs = new ArrayList<>();
         orgs.add(org1);
         orgs.add(org2);
         group.setOrganizers(orgs);
@@ -106,7 +106,7 @@ class GroupServiceTest implements ConfigTest {
         Group newGroup = Group.builder()
                 .id(2L)
                 .name("AWS")
-                .organizers(new HashSet<>())
+                .organizers(new ArrayList<>())
                 .students(new ArrayList<>())
                 .build();
 

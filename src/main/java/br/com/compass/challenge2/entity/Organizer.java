@@ -35,7 +35,7 @@ public class Organizer extends RepresentationModel<Organizer> {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "organizers_groups", joinColumns = @JoinColumn(name = "organizer_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
     @JsonIgnore
-    private Set<Group> groups;
+    private List<Group> groups;
 
     @ElementCollection(targetClass = Role.class)
     @JoinTable(name = "organizers_roles", joinColumns = @JoinColumn(name = "organizer_id"))
