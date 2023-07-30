@@ -6,7 +6,8 @@ import org.junit.platform.suite.api.Suite;
 @Suite
 @Testable
 @SelectClasses({
-        GroupServiceTest.class
+        GroupServiceTest.class,
+        StudentServiceTest.class
 })
 public class SuiteService {
 }
