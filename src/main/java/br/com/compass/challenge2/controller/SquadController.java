@@ -39,8 +39,7 @@ public class SquadController {
 
         squads.forEach(squad -> squad.add(
                 linkTo(methodOn(SquadController.class).getSquadById(squad.getId())).withSelfRel(),
-                linkTo(methodOn(SquadController.class).updateSquad(squad.getId(), squad)).withRel("update")
-        ));
+                linkTo(methodOn(SquadController.class).updateSquad(squad.getId(), squad)).withRel("update")));
 
         return new ResponseEntity<>(squads, HttpStatus.OK);
     }
@@ -116,12 +115,14 @@ public class SquadController {
 	        List<Squad> squads = squadService.findBySquadNameContainingIgnoreCase(squadName);
 	        return ResponseEntity.status(HttpStatus.OK).body(squads);
 	    }
-
-     @GetMapping("/search/organizer-name")
-	    public ResponseEntity<List<Squad>> findByOrganizerName(@RequestParam("name") String organizerName) {
-	        List<Squad> squads = squadService.findByOrganizerNameContainingIgnoreCase(organizerName);
-	        return ResponseEntity.status(HttpStatus.OK).body(squads);
+	
+	 @GetMapping("/search/student-name")
+	    public ResponseEntity<List<Squad>> findByStudentName(@RequestParam("name") String studentName) {
+	        List<Squad> squads = squadService.findByStudentNameContainingIgnoreCase(studentName);
+	        return ResponseEntity.ok(squads);
 	    }
+
+     
 	    
 	
 }
