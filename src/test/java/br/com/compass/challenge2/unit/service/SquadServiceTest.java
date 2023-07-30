@@ -13,12 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import br.com.compass.challenge2.config.ConfigTest;
 import br.com.compass.challenge2.entity.Squad;
 import br.com.compass.challenge2.service.SquadService;
 import br.com.compass.challenge2.entity.Student;
 
 @SpringBootTest
-public class SquadServiceTest {
+public class SquadServiceTest implements ConfigTest {
+
 
     @Autowired
     private SquadService squadService;
