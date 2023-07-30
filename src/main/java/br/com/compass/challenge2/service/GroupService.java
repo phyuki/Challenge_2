@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class GroupService implements CrudService<Group> {
         return groupRepository.findAll();
     }
 
+    @Transactional
     @Override
     public Group save(Group group) {
 
@@ -70,13 +72,5 @@ public class GroupService implements CrudService<Group> {
         }
 
         return group;
-    }
-
-    public Group findDistinctByName(String name) {
-        return groupRepository.findByName(name);
-    }
-
-    public Long deleteByName(String name) {
-        return groupRepository.deleteByName(name);
     }
 }
