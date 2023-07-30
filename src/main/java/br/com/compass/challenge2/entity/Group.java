@@ -17,6 +17,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Group extends RepresentationModel<Group> {
