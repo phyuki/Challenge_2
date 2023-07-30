@@ -52,7 +52,8 @@ public class StudentController {
                 linkTo(methodOn(StudentController.class).findStudentById(student.getId())).withSelfRel(),
                 linkTo(methodOn(StudentController.class).updateStudent(student.getId(), student))
                         .withRel("update"),
-                linkTo(methodOn(StudentController.class).deleteStudent(student.getId())).withRel("delete"))).toList();
+                linkTo(methodOn(StudentController.class).deleteStudent(student.getId())).withRel("delete"),
+                linkTo(methodOn(AssessmentController.class).getAssessmentsByStudentId(student.getId())).withRel("assessments"))).toList();
 
         return new ResponseEntity<>(students, HttpStatus.OK);
     }
@@ -63,6 +64,7 @@ public class StudentController {
         student.add(linkTo(methodOn(StudentController.class).findStudentById(id)).withSelfRel(),
                 linkTo(methodOn(StudentController.class).updateStudent(id, student)).withRel("update"),
                 linkTo(methodOn(StudentController.class).deleteStudent(id)).withRel("delete"),
+                linkTo(methodOn(AssessmentController.class).getAssessmentsByStudentId(student.getId())).withRel("assessments"),
                 linkTo(methodOn(StudentController.class).findAllStudents()).withRel("all_students"));
 
         return new ResponseEntity<>(student, HttpStatus.OK);
