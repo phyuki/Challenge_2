@@ -59,7 +59,7 @@ public class SquadControllerTest implements ConfigTest {
 
     @Test
     public void testGetSquadById() throws Exception {
-        // Primeiro, crie uma Squad para testar a busca por ID
+        
         Squad squad = new Squad();
         squad.setSquadName("Squad Test");
         squadService.save(squad);
@@ -96,7 +96,7 @@ public class SquadControllerTest implements ConfigTest {
 
     @Test
     public void testDeleteSquad() throws Exception {
-        // Primeiro, crie uma Squad para testar a exclusão
+        
         Squad squad = new Squad();
         squad.setSquadName("Squad Test");
         squadService.save(squad);
