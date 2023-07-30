@@ -1,10 +1,12 @@
 package br.com.compass.challenge2.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.hateoas.RepresentationModel;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -30,10 +32,10 @@ public class Organizer extends RepresentationModel<Organizer> {
     @Column(nullable = false)
     private String email;
 
-    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "organizers_groups", joinColumns = @JoinColumn(name = "organizer_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
-    private List<Group> groups;
+    @JsonIgnore
+    private Set<Group> groups;
 
     @ElementCollection(targetClass = Role.class)
     @JoinTable(name = "organizers_roles", joinColumns = @JoinColumn(name = "organizer_id"))

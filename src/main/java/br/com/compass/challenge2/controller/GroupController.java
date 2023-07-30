@@ -80,7 +80,6 @@ public class GroupController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Group> deleteGroupById(@PathVariable Long id) {
         Group group = groupService.findById(id);
-        System.out.println("Organizers: "+group.getOrganizers().get(0).getName());
 
         Group deletedGroup = groupService.deleteById(id);
         deletedGroup.add(linkTo(methodOn(GroupController.class).findAllGroups()).withRel("all_groups"));

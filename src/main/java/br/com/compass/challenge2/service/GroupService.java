@@ -1,12 +1,15 @@
 package br.com.compass.challenge2.service;
 
 import br.com.compass.challenge2.entity.Group;
+import br.com.compass.challenge2.entity.Organizer;
 import br.com.compass.challenge2.repository.GroupRepository;
+import br.com.compass.challenge2.repository.OrganizerRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -14,10 +17,12 @@ import java.util.NoSuchElementException;
 public class GroupService implements CrudService<Group> {
 
     private final GroupRepository groupRepository;
+    private final OrganizerRepository organizerRepository;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository) {
+    public GroupService(GroupRepository groupRepository, OrganizerRepository organizerRepository) {
         this.groupRepository = groupRepository;
+        this.organizerRepository = organizerRepository;
     }
 
     @Override
@@ -32,7 +37,17 @@ public class GroupService implements CrudService<Group> {
 
     @Override
     public Group save(Group group) {
-        return groupRepository.save(group);
+
+        Group savedGroup = groupRepository.save(group);
+        List<Organizer> organizersInGroup = new ArrayList<>(savedGroup.getOrganizers());
+
+        for(Organizer org : organizersInGroup){
+            org.getGroups().add(savedGroup);
+        }
+
+        organizerRepository.saveAll(organizersInGroup);
+
+        return savedGroup;
     }
 
     @Override
