@@ -1,7 +1,6 @@
 package br.com.compass.challenge2.controller;
 
 import br.com.compass.challenge2.entity.Group;
-import br.com.compass.challenge2.entity.Organizer;
 import br.com.compass.challenge2.service.GroupService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
