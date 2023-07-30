@@ -1,20 +1,20 @@
 package br.com.compass.challenge2.unit.service;
 
+import br.com.compass.challenge2.config.ConfigTest;
 import br.com.compass.challenge2.entity.Group;
 import br.com.compass.challenge2.entity.Organizer;
 import br.com.compass.challenge2.entity.Student;
 import br.com.compass.challenge2.service.GroupService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
-class GroupServiceTest {
+
+class GroupServiceTest implements ConfigTest {
 
     @Autowired
     GroupService groupService;
@@ -73,8 +73,8 @@ class GroupServiceTest {
         groupBoot.setOrganizers(new HashSet<Organizer>());
         groupService.save(groupBoot);
 
-        assertEquals(groupService.findById(1L).getName(), "Spring Boot");
-        assertEquals(groupService.findById(2L).getName(), "AWS");
+        assertEquals("Spring Boot",groupService.findById(2L).getName());
+        assertEquals("AWS", groupService.findById(2L).getName());
     }
 
     @Test

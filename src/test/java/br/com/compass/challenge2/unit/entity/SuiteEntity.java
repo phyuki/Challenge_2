@@ -7,6 +7,8 @@ import org.junit.platform.suite.api.Suite;
 @Suite
 @Testable
 @SelectClasses({
+        AssessmentTest.class,
+        StudentTest.class
 })
 public class SuiteEntity {
 }

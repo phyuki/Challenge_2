@@ -6,7 +6,7 @@ import org.junit.platform.suite.api.Suite;
 @Suite
 @Testable
 @SelectClasses({
-
+        AssessmentControllerTest.class,
 })
 public class SuiteController {
 }

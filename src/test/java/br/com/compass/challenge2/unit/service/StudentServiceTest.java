@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import br.com.compass.challenge2.config.ConfigTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import br.com.compass.challenge2.entity.Student;
@@ -18,8 +18,8 @@ import br.com.compass.challenge2.repository.StudentRepository;
 import br.com.compass.challenge2.service.StudentService;
 import jakarta.persistence.EntityNotFoundException;
 
-@SpringBootTest
-public class StudentServiceTest {
+
+public class StudentServiceTest implements ConfigTest {
 
     @MockBean
     private StudentRepository studentRepository;
