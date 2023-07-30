@@ -85,4 +85,20 @@ public class GroupTest {
         assertEquals("Pedro", group.getStudents().get(0).getName());
         assertEquals("pedro@email.com", group.getStudents().get(0).getEmail());
     }
+
+    @Test
+    public void NoConstraintViolationsWithNullStudentsAndOrganizers() {
+        Set<ConstraintViolation<Group>> violations = validator.validate(group);
+        assertEquals(0, violations.size());
+    }
+
+    @Test
+    public void ConstraintViolationNotBlankOnGroupName() {
+        group.setName("");
+
+        Set<ConstraintViolation<Group>> violations = validator.validate(group);
+        assertEquals(1, violations.size());
+        assertEquals("name", violations.iterator().next().getPropertyPath().toString());
+    }
+
 }
