@@ -43,7 +43,7 @@ public class Organizer extends RepresentationModel<Organizer> {
     private String email;
 
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "organizers_groups", joinColumns = @JoinColumn(name = "organizer_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
     private List<Group> groups;
 

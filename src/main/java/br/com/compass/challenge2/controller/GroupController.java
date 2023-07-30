@@ -9,6 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/api/groups")
 public class GroupController {
@@ -21,52 +25,63 @@ public class GroupController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Group>> getAllGroups() {
+    public ResponseEntity<List<Group>> findAllGroups() {
+
         List<Group> groups = groupService.findAll();
-        if (!groups.isEmpty()) {
-            return new ResponseEntity<>(groups, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+
+        groups.stream().map(group -> group.add(
+                linkTo(methodOn(GroupController.class).findGroupById(group.getId())).withSelfRel(),
+                linkTo(methodOn(GroupController.class).updateGroup(group.getId(), group))
+                        .withRel("update"))).toList();
+
+        return new ResponseEntity<>(groups, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Group> getGroupById(@PathVariable Long id) {
+    public ResponseEntity<Group> findGroupById(@PathVariable Long id) {
+
         Group group = groupService.findById(id);
-        if (group != null) {
-            return new ResponseEntity<>(group, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+
+        group.add(linkTo(methodOn(GroupController.class).findGroupById(id)).withSelfRel(),
+                linkTo(methodOn(GroupController.class).findAllGroups()).withRel("all_groups"),
+                linkTo(methodOn(GroupController.class).updateGroup(id, group)).withRel("update"),
+                linkTo(methodOn(GroupController.class).deleteGroupById(id)).withRel("delete"));
+
+        return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<Group> createGroup(@Valid @RequestBody Group group) {
         group.setId(0L);
         Group newGroup = groupService.save(group);
+
+        newGroup.add(
+                linkTo(methodOn(GroupController.class).findGroupById(newGroup.getId())).withSelfRel(),
+                linkTo(methodOn(GroupController.class).findAllGroups()).withRel("all_groups"),
+                linkTo(methodOn(GroupController.class).updateGroup(newGroup.getId(), group))
+                        .withRel("update"),
+                linkTo(methodOn(GroupController.class).deleteGroupById(newGroup.getId())).withRel("delete"));
+
         return new ResponseEntity<>(newGroup, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Group> updateGroupById(@PathVariable Long id, @Valid @RequestBody Group group) {
-        Group existingGroup = groupService.findById(id);
-        if (existingGroup != null) {
-            group.setId(id);
-            Group updatedGroup = groupService.update(group);
-            return new ResponseEntity<>(updatedGroup, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Group> updateGroup(@PathVariable Long id, @Valid @RequestBody Group group) {
+        group.setId(id);
+        Group updatedGroup = groupService.update(group);
+
+        updatedGroup.add(linkTo(methodOn(GroupController.class).findGroupById(id)).withSelfRel(),
+                linkTo(methodOn(GroupController.class).findAllGroups()).withRel("all_groups"));
+
+        return new ResponseEntity<>(updatedGroup, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGroupById(@PathVariable Long id) {
-        Group existingGroup = groupService.findById(id);
-        if (existingGroup != null) {
-            groupService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Group> deleteGroupById(@PathVariable Long id) {
+        Group deletedGroup = groupService.deleteById(id);
+        System.out.println("Deleted group: "+deletedGroup.getName());
+        deletedGroup.add(linkTo(methodOn(GroupController.class).findAllGroups()).withRel("all_groups"));
+        System.out.println("Organizers: "+deletedGroup.getOrganizers());
+        return new ResponseEntity<>(deletedGroup, HttpStatus.OK);
     }
 }
