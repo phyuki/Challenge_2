@@ -1,6 +1,7 @@
 package br.com.compass.challenge2.service;
 
 import br.com.compass.challenge2.entity.Assessment;
+import br.com.compass.challenge2.entity.Student;
 import br.com.compass.challenge2.repository.AssessmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,11 @@ import java.util.Optional;
 public class AssessmentService implements CrudService<Assessment> {
 
     private AssessmentRepository assessmentRepository;
-
+    private StudentService studentService;
     @Autowired
-    public AssessmentService(AssessmentRepository repository) {
+    public AssessmentService(AssessmentRepository repository, StudentService studentService) {
         this.assessmentRepository = repository;
+        this.studentService = studentService;
     }
 
     @Override
@@ -63,5 +65,12 @@ public class AssessmentService implements CrudService<Assessment> {
         }
 
         return assessment;
+    }
+    public List<Assessment> getAssessmentsByStudentId(Long studentId) {
+        Student student = studentService.findById(studentId);
+        if (student == null) {
+            throw new EntityNotFoundException("Student not found with id: " + studentId);
+        }
+        return assessmentRepository.findByStudent(student);
     }
 }
