@@ -1,5 +1,9 @@
 package br.com.compass.challenge2.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,7 +31,7 @@ public class Group extends RepresentationModel<Group> {
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Student> students;
 
-    @ManyToMany(mappedBy = "groups")
-    private List<Organizer> organizers;
+    @ManyToMany(mappedBy = "groups", fetch = FetchType.EAGER)
+    private Set<Organizer> organizers;
 
 }
