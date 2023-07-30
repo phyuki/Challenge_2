@@ -36,7 +36,11 @@ public class StudentServiceTest {
         Student student = new Student();
         student.setName("Gabriel");
 
-        when(studentRepository.save(any())).thenReturn(student);
+        when(studentRepository.save(any())).thenAnswer(invocation -> {
+            Student savedStudent = invocation.getArgument(0);
+            savedStudent.setId(1L);
+            return savedStudent;
+        });
 
         Student savedStudent = studentService.save(student);
 
