@@ -37,12 +37,12 @@ public class SquadController {
     
 	
 	@GetMapping
-    public ResponseEntity<CollectionModel<EntityModel<Squad>>> getAllSquads() {
+    public ResponseEntity<List<Squad>> getAllSquads() {
         List<Squad> squads = squadService.findAll();
         List<EntityModel<Squad>> squadModels = EntityModel.of(squads).add(
                     linkTo(methodOn(SquadController.class).getAllSquads()).withSelfRel(),
-                    linkTo(methodOn(SquadController.class).createSquad(null)).withRel("create")).toList();
-            return ResponseEntity.status(HttpStatus.OK).body(CollectionModel.of(squadModels));
+                    linkTo(methodOn(SquadController.class).createSquad(null)).withRel("update")).toList();
+            return new ResponseEntity<>(squads, HttpStatus.OK);
         }
     
 	
