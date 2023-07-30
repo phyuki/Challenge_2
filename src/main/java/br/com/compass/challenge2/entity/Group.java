@@ -3,7 +3,9 @@ package br.com.compass.challenge2.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -26,6 +28,6 @@ public class Group extends RepresentationModel<Group> {
     private List<Student> students;
 
     @ManyToMany(mappedBy = "groups")
-    private List<Organizer> organizers;
+    private Set<Organizer> organizers = new HashSet<Organizer>();
 
 }
