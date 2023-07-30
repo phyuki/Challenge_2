@@ -1,16 +1,10 @@
 package br.com.compass.challenge2.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import org.springframework.hateoas.RepresentationModel;
 
 @Table(name = "squads")
 @Entity
@@ -18,7 +12,7 @@ import jakarta.persistence.Table;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Squad {
+public class Squad extends RepresentationModel<Squad> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,19 +22,7 @@ public class Squad {
     @Column(name = "squad_name", nullable = false)
     private String squadName;
 
-    @OneToMany(mappedBy = "squad", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "squad", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Student> students;
-    
-    public String getSquadName() {
-        return squadName;
-    }
-    public void setSquadName(String squadName) {
-        this.squadName = squadName;
-    }
-    public List<Student> getStudents() {
-        return students;
-    }
-    public void setStudents(List<Student> students) {
-        this.students = students;
-    }
+
 }
