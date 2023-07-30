@@ -6,7 +6,6 @@ import br.com.compass.challenge2.entity.Squad;
 import br.com.compass.challenge2.entity.Student;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
