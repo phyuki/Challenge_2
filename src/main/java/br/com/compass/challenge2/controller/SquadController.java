@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.compass.challenge2.entity.Group;
 import br.com.compass.challenge2.entity.Squad;
 import br.com.compass.challenge2.service.SquadService;
 import jakarta.validation.Valid;
@@ -37,14 +38,16 @@ public class SquadController {
     
 	
 	@GetMapping
-    public ResponseEntity<List<Squad>> getAllSquads() {
+	public ResponseEntity<List<Squad>> findAllSquads() {
         List<Squad> squads = squadService.findAll();
-        List<EntityModel<Squad>> squadModels = EntityModel.of(squads).add(
-                    linkTo(methodOn(SquadController.class).getAllSquads()).withSelfRel(),
-                    linkTo(methodOn(SquadController.class).createSquad(null)).withRel("update")).toList();
-            return new ResponseEntity<>(squads, HttpStatus.OK);
-        }
-    
+
+        squads.forEach(squad -> squad.add(
+                linkTo(methodOn(SquadController.class).getSquadById(squad.getId())).withSelfRel(),
+                linkTo(methodOn(SquadController.class).updateSquad(squad.getId(), squad)).withRel("update")
+        ));
+
+        return new ResponseEntity<>(squads, HttpStatus.OK);
+    }
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<EntityModel<Squad>> getSquadById(@PathVariable Long id) {		
@@ -52,7 +55,7 @@ public class SquadController {
 	    	if (squad != null) {
 	    		 EntityModel<Squad> squadModel = EntityModel.of(squad).add(
 	                     linkTo(methodOn(SquadController.class).getSquadById(id)).withSelfRel(),
-	                     linkTo(methodOn(SquadController.class).getAllSquads()).withRel("all_squads"),
+	                     linkTo(methodOn(SquadController.class).findAllSquads()).withRel("all_squads"),
 	                     linkTo(methodOn(SquadController.class).updateSquad(id, null)).withRel("update"),
 	                     linkTo(methodOn(SquadController.class).deleteSquad(id)).withRel("delete"));
             return ResponseEntity.status(HttpStatus.OK).body(squadModel);
@@ -69,7 +72,7 @@ public class SquadController {
 
 	        EntityModel<Squad> squadModel = EntityModel.of(createdSquad).add(
 	                linkTo(methodOn(SquadController.class).getSquadById(createdSquad.getId())).withSelfRel(),
-	                linkTo(methodOn(SquadController.class).getAllSquads()).withRel("all_squads"),
+	                linkTo(methodOn(SquadController.class).findAllSquads()).withRel("all_squads"),
 	                linkTo(methodOn(SquadController.class).updateSquad(createdSquad.getId(), null)).withRel("update"),
 	                linkTo(methodOn(SquadController.class).deleteSquad(createdSquad.getId())).withRel("delete")
 	        );
@@ -86,7 +89,7 @@ public class SquadController {
         if (updatedSquad != null) {
             EntityModel<Squad> squadModel = EntityModel.of(updatedSquad).add(
                     linkTo(methodOn(SquadController.class).getSquadById(id)).withSelfRel(),
-                    linkTo(methodOn(SquadController.class).getAllSquads()).withRel("all_squads")
+                    linkTo(methodOn(SquadController.class).findAllSquads()).withRel("all_squads")
             );
 
             return ResponseEntity.status(HttpStatus.OK).body(squadModel);
@@ -102,7 +105,7 @@ public class SquadController {
 	        if (squad != null) {
 	            Squad deletedSquad = squadService.deleteById(id);
 	            EntityModel<Squad> squadModel = EntityModel.of(deletedSquad).add(
-	                    linkTo(methodOn(SquadController.class).getAllSquads()).withRel("all_squads")
+	                    linkTo(methodOn(SquadController.class).findAllSquads()).withRel("all_squads")
 	            );
 	            return ResponseEntity.status(HttpStatus.OK).body(squadModel);
 	        } else {
