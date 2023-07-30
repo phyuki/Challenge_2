@@ -1,15 +1,22 @@
 package br.com.compass.challenge2.controller;
 
-import br.com.compass.challenge2.converter.Converter;
 import br.com.compass.challenge2.entity.Organizer;
 import br.com.compass.challenge2.service.OrganizerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/organizers")
 public class OrganizerController {
@@ -21,51 +28,59 @@ public class OrganizerController {
     }
 
     @PostMapping
-    public ResponseEntity<Organizer> createOrganizer(@RequestBody Organizer organizer) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public EntityModel<Organizer> createOrganizer(@RequestBody @Valid Organizer organizer) {
         Organizer createdOrganizer = organizerService.save(organizer);
-        return new ResponseEntity<>(createdOrganizer, HttpStatus.CREATED);
+        return getOrganizerEntityModel(createdOrganizer);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Organizer> updateOrganizer(@Valid @PathVariable Long id, @RequestBody Organizer organizer) {
+    public EntityModel<Organizer> updateOrganizer(@PathVariable Long id, @RequestBody @Valid Organizer updatedOrganizer) {
         Organizer existingOrganizer = organizerService.findById(id);
-        if (existingOrganizer != null) {
-            organizer.setId(id);
-            Organizer updatedOrganizer = organizerService.update(organizer);
-            return new ResponseEntity<>(updatedOrganizer, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (existingOrganizer == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Organizer not found with id: " + id);
         }
+
+        updatedOrganizer.setId(id);
+        Organizer savedOrganizer = organizerService.update(updatedOrganizer);
+        return getOrganizerEntityModel(savedOrganizer);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Organizer> getOrganizerById(@PathVariable Long id) {
+    public EntityModel<Organizer> getOrganizerById(@PathVariable Long id) {
         Organizer organizer = organizerService.findById(id);
-        if (organizer != null) {
-            return new ResponseEntity<>(organizer, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (organizer == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Organizer not found with id: " + id);
         }
+
+        return getOrganizerEntityModel(organizer);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrganizer(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteOrganizer(@PathVariable Long id) {
         Organizer existingOrganizer = organizerService.findById(id);
-        if (existingOrganizer != null) {
-            organizerService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (existingOrganizer == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Organizer not found with id: " + id);
         }
+
+        organizerService.deleteById(id);
     }
 
     @GetMapping
-    public ResponseEntity<List<Organizer>> getAllOrganizers() {
+    public CollectionModel<EntityModel<Organizer>> getAllOrganizers() {
         List<Organizer> organizers = organizerService.findAll();
-        if (organizers.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(organizers, HttpStatus.OK);
-        }
+        List<EntityModel<Organizer>> organizerResources = organizers.stream()
+                .map(this::getOrganizerEntityModel)
+                .collect(Collectors.toList());
+
+        Link selfLink = linkTo(methodOn(OrganizerController.class).getAllOrganizers()).withSelfRel();
+        return CollectionModel.of(organizerResources, selfLink);
+    }
+
+    // Helper method to create EntityModel for an Organizer with self-link
+    private EntityModel<Organizer> getOrganizerEntityModel(Organizer organizer) {
+        Link selfLink = linkTo(methodOn(OrganizerController.class).getOrganizerById(organizer.getId())).withSelfRel();
+        return EntityModel.of(organizer, selfLink);
     }
 }
