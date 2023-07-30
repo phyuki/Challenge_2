@@ -4,34 +4,54 @@ import br.com.compass.challenge2.config.ConfigTest;
 import br.com.compass.challenge2.entity.Group;
 import br.com.compass.challenge2.entity.Organizer;
 import br.com.compass.challenge2.entity.Student;
+import br.com.compass.challenge2.repository.GroupRepository;
+import br.com.compass.challenge2.repository.OrganizerRepository;
 import br.com.compass.challenge2.service.GroupService;
+import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 
 class GroupServiceTest implements ConfigTest {
 
-    @Autowired
-    GroupService groupService;
+    private GroupService groupService;
+    @MockBean
+    private GroupRepository groupRepository;
+    @MockBean
+    private OrganizerRepository organizerRepository;
+
+    private Group group;
+
+    @BeforeEach
+    public void setup(){
+        groupService = new GroupService(groupRepository, organizerRepository);
+        group = Group.builder()
+                .id(1L)
+                .name("Spring Boot")
+                .organizers(new HashSet<>())
+                .students(new ArrayList<>())
+                .build();
+    }
 
     @Test
     void saveGroupWithoutStudentsNeitherOrganizers() {
-        Group groupBoot = new Group();
-        groupBoot.setName("Spring Boot");
-        groupBoot.setOrganizers(new HashSet<Organizer>());
-        groupService.save(groupBoot);
+        when(groupRepository.save(any())).thenReturn(group);
+        Group savedGroup = groupService.save(group);
+
+        verify(groupRepository, times(1)).save(any(Group.class));
+        assertEquals("Spring Boot", savedGroup.getName());
     }
 
     @Test
     void saveGroupWithStudentsAndOrganizers() {
-        Group groupBoot = new Group();
-        groupBoot.setName("Spring Boot");
-
         Student student1 = new Student();
         student1.setName("Pedro");
         student1.setEmail("pedro@email.com");
@@ -39,10 +59,7 @@ class GroupServiceTest implements ConfigTest {
         Student student2 = new Student();
         student2.setName("João");
         student2.setEmail("joao@email.com");
-
-        groupBoot.setStudents(new ArrayList<Student>());
-        groupBoot.getStudents().add(student1);
-        groupBoot.getStudents().add(student2);
+        group.setStudents(new ArrayList<>(Arrays.asList(student1, student2)));
 
         Organizer org1 = new Organizer();
         org1.setName("Renan");
@@ -54,38 +71,90 @@ class GroupServiceTest implements ConfigTest {
         org2.setEmail("maria@email.com");
         org2.setGroups(new HashSet<Group>());
 
-        groupBoot.setOrganizers(new HashSet<Organizer>());
-        groupBoot.getOrganizers().add(org1);
-        groupBoot.getOrganizers().add(org2);
+        Set<Organizer> orgs = new HashSet<>();
+        orgs.add(org1);
+        orgs.add(org2);
+        group.setOrganizers(orgs);
 
-        groupService.save(groupBoot);
+        when(groupRepository.save(any())).thenReturn(group);
+        Group savedGroup = groupService.save(group);
+
+        assertThat(savedGroup).usingRecursiveComparison().isEqualTo(group);
+        verify(groupRepository, times(1)).save(any(Group.class));
     }
 
     @Test
-    void findById() {
-        Group groupBoot = new Group();
-        groupBoot.setName("Spring Boot");
-        groupBoot.setOrganizers(new HashSet<Organizer>());
-        groupService.save(groupBoot);
+    void findExistingGroup() {
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(group));
 
-        Group groupAWS = new Group();
-        groupBoot.setName("AWS");
-        groupBoot.setOrganizers(new HashSet<Organizer>());
-        groupService.save(groupBoot);
+        Group findGroup = groupService.findById(1L);
 
-        assertEquals("Spring Boot",groupService.findById(2L).getName());
-        assertEquals("AWS", groupService.findById(2L).getName());
+        assertEquals(1L, findGroup.getId());
+        assertEquals("Spring Boot", findGroup.getName());
+        verify(groupRepository, times(1)).findById(any(Long.class));
     }
 
     @Test
-    void findAll() {
+    void findNonExistingGroup() {
+        when(groupRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> groupService.findById(1L));
     }
 
     @Test
-    void update() {
+    void findAllGroups() {
+        Group newGroup = Group.builder()
+                .id(2L)
+                .name("AWS")
+                .organizers(new HashSet<>())
+                .students(new ArrayList<>())
+                .build();
+
+        List<Group> allGroups = new ArrayList<>(Arrays.asList(group, newGroup));
+        when(groupRepository.findAll()).thenReturn(allGroups);
+        List<Group> findAllGroups = groupService.findAll();
+
+        assertThat(findAllGroups).usingRecursiveComparison().isEqualTo(allGroups);
+        verify(groupRepository, times(1)).findAll();
     }
 
     @Test
-    void deleteById() {
+    void updateExistingGroup() {
+        when(groupRepository.existsById(1L)).thenReturn(true);
+        when(groupRepository.save(any())).thenReturn(group);
+
+        Group updatedGroup = groupService.update(group);
+
+        assertEquals(1L, updatedGroup.getId());
+        assertEquals("Spring Boot", updatedGroup.getName());
+        verify(groupRepository, times(1)).save(group);
+    }
+
+    @Test
+    void updateNonExistingGroup() {
+        when(groupRepository.existsById(1L)).thenReturn(false);
+
+        assertThrows(EntityNotFoundException.class, () -> groupService.update(group));
+    }
+
+    @Test
+    void deleteExistingGroup() {
+
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(group));
+
+        Group groupStudent = groupService.deleteById(1L);
+
+        assertThat(groupStudent).usingRecursiveComparison().isEqualTo(group);
+        verify(groupRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void deleteNonExistingGroup() {
+
+        when(groupRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> groupService.deleteById(1L));
+        verify(groupRepository, times(1)).findById(any(Long.class));
+
     }
 }
