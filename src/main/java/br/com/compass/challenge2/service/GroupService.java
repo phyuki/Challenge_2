@@ -28,7 +28,11 @@ public class GroupService implements CrudService<Group> {
 
     @Override
     public Group findById(Long id) {
-        return groupRepository.findById(id).orElse(null);
+        try {
+            return groupRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            throw new EntityNotFoundException("Group does not exist with id: " + id);
+        }
     }
 
     @Override
@@ -57,7 +61,7 @@ public class GroupService implements CrudService<Group> {
         if (groupRepository.existsById(group.getId())) {
             return groupRepository.save(group);
         } else {
-            throw new IllegalArgumentException("Group with id " + group.getId() + " not found.");
+            throw new EntityNotFoundException("Group with id " + group.getId() + " not found.");
         }
     }
 

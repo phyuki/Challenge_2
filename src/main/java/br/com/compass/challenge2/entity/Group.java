@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Group extends RepresentationModel<Group> {
@@ -25,6 +27,7 @@ public class Group extends RepresentationModel<Group> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(name = "group_name", nullable = false)
     private String name;
 
@@ -32,6 +35,6 @@ public class Group extends RepresentationModel<Group> {
     private List<Student> students;
 
     @ManyToMany(mappedBy = "groups", fetch = FetchType.EAGER)
-    private Set<Organizer> organizers;
+    private List<Organizer> organizers;
 
 }
