@@ -78,12 +78,12 @@ public class GroupTest {
         org = new Organizer();
         org.setId(1L);
         org.setName("João");
-        org.setEmail("joão@email.com");
-        group.setStudents(Arrays.asList(student));
+        org.setEmail("joao@email.com");
+        group.setOrganizers(Arrays.asList(org));
 
         assertEquals(1L, group.getOrganizers().get(0).getId());
-        assertEquals("Pedro", group.getStudents().get(0).getName());
-        assertEquals("pedro@email.com", group.getStudents().get(0).getEmail());
+        assertEquals("João", group.getOrganizers().get(0).getName());
+        assertEquals("joao@email.com", group.getOrganizers().get(0).getEmail());
     }
 
     @Test
