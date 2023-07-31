@@ -1,7 +1,6 @@
 package br.com.compass.challenge2.unit.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
@@ -12,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import br.com.compass.challenge2.config.ConfigTest;
 import br.com.compass.challenge2.entity.Squad;
 import br.com.compass.challenge2.service.SquadService;
+import jakarta.persistence.EntityNotFoundException;
+
 
 @SpringBootTest
 public class SquadServiceTest implements ConfigTest {
@@ -22,21 +23,18 @@ public class SquadServiceTest implements ConfigTest {
 
     @Test
     public void testSaveSquad() {
-        // Criar uma nova Squad para teste
+        
         Squad squad = new Squad();
         squad.setSquadName("JEDGP");
-
-        // Salvar a Squad no banco de dados
-        Squad savedSquad = squadService.save(squad);
-
-        // Verificar se a Squad foi salva com sucesso
+   
+        Squad savedSquad = squadService.save(squad);       
         assertNotNull(savedSquad.getId());
         assertEquals("JEDGP", savedSquad.getSquadName());
     }
 
     @Test
     public void testFindAllSquads() {
-        // Cria algumas Squads para teste
+        
         Squad squad1 = new Squad();
         squad1.setSquadName("Squad Teste 1");
 
@@ -64,20 +62,38 @@ public class SquadServiceTest implements ConfigTest {
     }
 
     @Test
-    public void testUpdateSquad() {
-        // Cria uma nova Squad para teste.
+    public void testUpdateSquad() {    	 
         Squad squad = new Squad();
-        squad.setSquadName("Squad Teste 4");
-
-        // Salva a Squad no banco de dados.
+        squad.setSquadName("Squad Inicial");
         Squad savedSquad = squadService.save(squad);
-
-        // Atualiza o nome da Squad.
-        savedSquad.setSquadName("Squad Atualizada");
-        Squad updatedSquad = squadService.update(savedSquad);
-
-        // Verifica se a Squad foi atualizada de forma correta.
-        assertEquals("Squad Atualizada", updatedSquad.getSquadName());
+     
+        Squad updatedSquad = new Squad();
+        updatedSquad.setId(savedSquad.getId());
+        updatedSquad.setSquadName("Squad Atualizada");
+        
+        Squad result = squadService.update(updatedSquad);
+    
+        assertNotNull(result);
+    
+        assertEquals(updatedSquad.getId(), result.getId());
+        assertEquals(updatedSquad.getSquadName(), result.getSquadName());
+    }        
+    
+    @Test
+    public void testUpdateSquadProperties() {       
+        Squad squad = new Squad();
+        squad.setSquadName("Squad Inicial");
+        Squad savedSquad = squadService.save(squad);
+      
+        Squad updatedSquad = new Squad();
+        updatedSquad.setId(savedSquad.getId());
+        updatedSquad.setSquadName("Squad Atualizada");
+        
+        Squad result = squadService.update(savedSquad.getId(), updatedSquad);
+        assertNotNull(result);        
+        assertEquals(updatedSquad.getId(), result.getId());
+        assertEquals(updatedSquad.getSquadName(), result.getSquadName()); 
+        assertEquals(savedSquad.getStudents(), result.getStudents());
     }
 
     @Test
@@ -90,14 +106,24 @@ public class SquadServiceTest implements ConfigTest {
         Squad deletedSquad = squadService.deleteById(savedSquad.getId());
         
         assertNotNull(deletedSquad);
-        assertEquals(savedSquad.getId(), deletedSquad.getId());
+        assertEquals(savedSquad.getId(), deletedSquad.getId());       
        
+    }
+    
+    @Test
+    public void testDeleteNonExistentSquad() {       
+        Long nonExistentSquadId = 999L;      
+        try {
+            squadService.deleteById(nonExistentSquadId);          
+            fail("Expected EntityNotFoundException, but no exception was thrown.");
+        } catch (EntityNotFoundException e) {            
+            assertTrue(e.getMessage().contains("Squad does not exist with id: " + nonExistentSquadId));
+        }
     }
 
     // Teste para o filtro de pesquisa a partir do nome da Squad
     @Test
-    public void testFindBySquadNameContainingIgnoreCase() {
-        // Cria algumas Squads para teste.
+    public void testFindBySquadNameContainingIgnoreCase() {       
         Squad squad1 = new Squad();
         squad1.setSquadName("Squad Teste 6");
 
@@ -107,10 +133,8 @@ public class SquadServiceTest implements ConfigTest {
         squadService.save(squad1);
         squadService.save(squad2);
 
-        // Pesquisa Squads a partir do nome.
-        List<Squad> foundSquads = squadService.findBySquadNameContainingIgnoreCase("Teste");
-
-        // Verifica se as Squads foram encontradas com éxito.
+      
+        List<Squad> foundSquads = squadService.findBySquadNameContainingIgnoreCase("Teste");       
         assertNotNull(foundSquads);
         assertEquals(2, foundSquads.size());
     }

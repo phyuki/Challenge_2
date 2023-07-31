@@ -34,8 +34,7 @@ public class SquadService implements CrudService<Squad> {
 	public Squad save(Squad squad) {
 		return squadRepository.save(squad);
 	}
-
-	@Override
+	
 	public Squad update(Squad squad) {
 		if (squadRepository.existsById(squad.getId())) {
 			return squadRepository.save(squad);
