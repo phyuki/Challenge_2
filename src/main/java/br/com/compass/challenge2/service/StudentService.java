@@ -1,7 +1,7 @@
 package br.com.compass.challenge2.service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import br.com.compass.challenge2.entity.Student;
 import br.com.compass.challenge2.repository.StudentRepository;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class StudentService implements CrudService<Student> {
 
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
     @Autowired
     public StudentService(StudentRepository studentRepository) {
@@ -24,7 +24,7 @@ public class StudentService implements CrudService<Student> {
         if (student.getId() == null)
             return studentRepository.save(student);
 
-        throw new IllegalArgumentException("The \"id\" attribute is not allowed when creating a new user.");
+        throw new IllegalArgumentException("The \"id\" attribute is not allowed when creating a new student.");
     }
 
     @Override
@@ -34,11 +34,14 @@ public class StudentService implements CrudService<Student> {
 
     @Override
     public Student findById(Long id) {
-        try {
-            return studentRepository.findById(id).get();
-        } catch (NoSuchElementException e) {
+        Student student;
+
+        if (studentRepository.findById(id).isPresent())
+            student = studentRepository.findById(id).get();
+        else
             throw new EntityNotFoundException("Student does not exist with id: " + id);
-        }
+
+        return student;
     }
 
     @Override
@@ -53,10 +56,11 @@ public class StudentService implements CrudService<Student> {
     @Override
     public Student deleteById(Long id) {
         Student student;
-        try {
+
+        if (studentRepository.findById(id).isPresent()) {
             student = studentRepository.findById(id).get();
             studentRepository.deleteById(id);
-        } catch (NoSuchElementException e) {
+        } else {
             throw new EntityNotFoundException("Student does not exist with id: " + id);
         }
 

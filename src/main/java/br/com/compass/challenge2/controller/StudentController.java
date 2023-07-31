@@ -48,7 +48,7 @@ public class StudentController {
     public ResponseEntity<List<Student>> findAllStudents() {
         List<Student> students = studentService.findAll();
 
-        students.stream().map(student -> student.add(
+        students = students.stream().map(student -> student.add(
                 linkTo(methodOn(StudentController.class).findStudentById(student.getId())).withSelfRel(),
                 linkTo(methodOn(StudentController.class).updateStudent(student.getId(), student))
                         .withRel("update"),
@@ -72,7 +72,7 @@ public class StudentController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Student> updateStudent(@Valid @PathVariable Long id,
-            @RequestBody Student student) {
+                                                 @RequestBody Student student) {
         student.setId(id);
         Student updatedStudent = studentService.update(student);
         updatedStudent.add(linkTo(methodOn(StudentController.class).findStudentById(id)).withSelfRel(),
