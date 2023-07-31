@@ -74,10 +74,8 @@ public class SquadTest {
         student2.setName("Joao");
         student2.setEmail("joao123@example.com");
         student2.setGroup(group2);
-
+ 
         
-        squad.getGroups().add(group1);
-        squad.getGroups().add(group2);
         squad.getStudents().add(student1);
         squad.getStudents().add(student2);
 
