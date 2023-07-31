@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.lang.Nullable;
 
 @Table(name = "students")
 @Entity
@@ -45,7 +46,7 @@ public class Student extends RepresentationModel<Student> {
     private List<Assessment> assessments;
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
