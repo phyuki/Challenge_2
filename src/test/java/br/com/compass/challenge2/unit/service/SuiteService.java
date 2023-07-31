@@ -9,7 +9,8 @@ import org.junit.platform.suite.api.Suite;
         GroupServiceTest.class,
         AssessmentServiceTest.class,
         StudentServiceTest.class,
-        SquadServiceTest.class
+        SquadServiceTest.class,
+        OrganizerServiceTest.class
 })
 public class SuiteService {
 }

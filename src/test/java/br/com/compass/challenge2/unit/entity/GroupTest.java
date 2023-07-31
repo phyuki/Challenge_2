@@ -21,8 +21,6 @@ public class GroupTest {
 
     @BeforeEach
     public void setUp() {
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
-
         group = Group.builder()
                 .id(1L)
                 .name("Spring Boot")
@@ -49,14 +47,11 @@ public class GroupTest {
         org.setName("João");
         org.setEmail("joão@email.com");
 
-        List<Organizer> orgs = new ArrayList<>();
-        orgs.add(org);
-
         group.setStudents(Arrays.asList(student));
-        group.setOrganizers(orgs);
+        group.setOrganizers(Arrays.asList(org));
 
         assertEquals(Arrays.asList(student), group.getStudents());
-        assertEquals(orgs, group.getOrganizers());
+        assertEquals(Arrays.asList(org), group.getOrganizers());
     }
 
     @Test
@@ -87,6 +82,7 @@ public class GroupTest {
 
     @Test
     public void NoConstraintViolationsWithNullStudentsAndOrganizers() {
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Group>> violations = validator.validate(group);
         assertEquals(0, violations.size());
     }
@@ -95,6 +91,7 @@ public class GroupTest {
     public void ConstraintViolationNotBlankOnGroupName() {
         group.setName("");
 
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Group>> violations = validator.validate(group);
         assertEquals(1, violations.size());
         assertEquals("name", violations.iterator().next().getPropertyPath().toString());

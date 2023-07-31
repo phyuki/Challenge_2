@@ -10,7 +10,8 @@ import org.junit.platform.suite.api.Suite;
         AssessmentTest.class,
         StudentTest.class,
         GroupTest.class,
-        SquadTest.class
+        SquadTest.class,
+        OrganizerTest.class
 })
 public class SuiteEntity {
 }
