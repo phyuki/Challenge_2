@@ -106,8 +106,9 @@ public class StudentTest {
         Student student1 = new Student(1L, "Gabriel", "gabriel@guilherme.com", group, squad, assessments);
         Student student2 = new Student(1L, "Gabriel", "gabriel@guilherme.com", group, squad, assessments);
 
-        // Act & Assert
-        assertEquals(student1, student2);
+        assertTrue(student1.equals(student2));
+        assertTrue(student2.equals(student1));
+
         assertEquals(student1.hashCode(), student2.hashCode());
     }
 }
