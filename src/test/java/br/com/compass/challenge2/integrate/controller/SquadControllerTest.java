@@ -1,18 +1,16 @@
 package br.com.compass.challenge2.integrate.controller;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.CoreMatchers.containsString;
 
-import br.com.compass.challenge2.entity.Student;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,7 +19,7 @@ import br.com.compass.challenge2.entity.Squad;
 import br.com.compass.challenge2.service.SquadService;
 
 
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class SquadControllerTest implements ConfigTest {
 
     @Autowired
@@ -31,32 +29,40 @@ public class SquadControllerTest implements ConfigTest {
     private SquadService squadService;
 
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @BeforeEach
-    public void setUp() {
-    	Squad squad1 = new Squad();
-        squad1.setSquadName("Squad 1");
-        squadService.save(squad1);
-
-        Squad squad2 = new Squad();
-        squad2.setSquadName("Squad 2");
-        squadService.save(squad2);
-    }
+    private ObjectMapper objectMapper;        
+   
+          
 
     @Test
     public void testCreateSquad() throws Exception {
         Squad squad = new Squad();
-        squad.setSquadName("Squad Test");
+    	    squad.setSquadName("Squad Test");
 
         mockMvc.perform(post("/api/squads")
-               .contentType(MediaType.APPLICATION_JSON)
-               .content(objectMapper.writeValueAsString(squad)))
-               .andExpect(status().isCreated())
-               .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-               .andExpect(jsonPath("$.squadName").value("Squad Test"));
-    }
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(objectMapper.writeValueAsString(squad)))
+              .andExpect(status().isCreated())
+              .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
+              .andExpect(jsonPath("$.squadName").value("Squad Test"));
+    	}
+        
+    @Test
+    public void testFindAllSquads() throws Exception {
+    	 Squad squad1 = new Squad();
+    	    squad1.setSquadName("Squad Teste 1");
+    	    squadService.save(squad1);
 
+    	    Squad squad2 = new Squad();
+    	    squad2.setSquadName("Squad Teste 2");
+    	    squadService.save(squad2);
+
+    	    mockMvc.perform(get("/api/squads"))
+    	           .andExpect(status().isOk())
+    	           .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+    	           .andExpect(jsonPath("$[0].squadName").value("Squad Teste 1"))
+    	           .andExpect(jsonPath("$[1].squadName").value("Squad Teste 2"));
+    	}
+    
     @Test
     public void testGetSquadById() throws Exception {
         
@@ -66,13 +72,14 @@ public class SquadControllerTest implements ConfigTest {
 
         mockMvc.perform(get("/api/squads/{id}", squad.getId()))
                .andExpect(status().isOk())
-               .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+               .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
                .andExpect(jsonPath("$.squadName").value("Squad Test"))
                .andExpect(jsonPath("$._links.self.href").value(containsString("/api/squads/" + squad.getId())))
                .andExpect(jsonPath("$._links.all_squads.href").value(containsString("/api/squads")))
                .andExpect(jsonPath("$._links.update.href").value(containsString("/api/squads/" + squad.getId())))
                .andExpect(jsonPath("$._links.delete.href").value(containsString("/api/squads/" + squad.getId())));
-    }
+    }    
+    
 
     @Test
     public void testUpdateSquad() throws Exception {
@@ -88,7 +95,7 @@ public class SquadControllerTest implements ConfigTest {
                .contentType(MediaType.APPLICATION_JSON)
                .content(objectMapper.writeValueAsString(squad)))
                .andExpect(status().isOk())
-               .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+               .andExpect(content().contentType(MediaTypes.HAL_JSON_VALUE))
                .andExpect(jsonPath("$.squadName").value("Updated Squad"))
                .andExpect(jsonPath("$._links.self.href").value(containsString("/api/squads/" + squad.getId())))
                .andExpect(jsonPath("$._links.all_squads.href").value(containsString("/api/squads")));
@@ -123,6 +130,6 @@ public class SquadControllerTest implements ConfigTest {
                .andExpect(jsonPath("$[1].squadName").value("Squad Teste 2"));
     }
 
-   // Teste para achar por nome de um integrante.
+   
     
 }

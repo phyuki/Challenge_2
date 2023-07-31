@@ -1,8 +1,9 @@
 package br.com.compass.challenge2.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import java.util.List;
+import java.util.*;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -20,9 +21,14 @@ public class Squad extends RepresentationModel<Squad> {
     private Long id;
 
     @Column(name = "squad_name", nullable = false)
+    @NotBlank(message = "Nome do squad não pode ser vazio")
     private String squadName;
 
     @OneToMany(mappedBy = "squad", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Student> students;  
+    
+    
+    
+    
     
 }
