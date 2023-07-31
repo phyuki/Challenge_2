@@ -10,8 +10,6 @@ import br.com.compass.challenge2.entity.Squad;
 public interface SquadRepository extends JpaRepository<Squad, Long> {	
 
 	  List<Squad> findBySquadNameContainingIgnoreCase(String squadName);
-	  List<Squad> findByStudentsNameContainingIgnoreCase(String studentName);
-
 	  
 	   
 }

@@ -69,20 +69,5 @@ public class SquadService implements CrudService<Squad> {
 	// Filtro de pesquisa (Achar pelo nome da Squad)
 	 public List<Squad> findBySquadNameContainingIgnoreCase(String squadName) {
 	        return squadRepository.findBySquadNameContainingIgnoreCase(squadName);
-	    }
-	 
-	// Filtro de pesquisa (Achar pelo nome de um estudante da Squad)
-	 public List<Squad> findByStudentNameContainingIgnoreCase(String studentName) {
-	        return squadRepository.findByStudentsNameContainingIgnoreCase(studentName);
-	    }
-    
-    
-
-	 
-	    
-	    
-	
-
-
-	
+	    }	
 }

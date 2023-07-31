@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.compass.challenge2.entity.Group;
 import br.com.compass.challenge2.entity.Squad;
 import br.com.compass.challenge2.service.SquadService;
 import jakarta.validation.Valid;
@@ -71,7 +70,7 @@ public class SquadController {
 	                linkTo(methodOn(SquadController.class).updateSquad(createdSquad.getId(), null)).withRel("update"),
 	                linkTo(methodOn(SquadController.class).deleteSquad(createdSquad.getId())).withRel("delete")
 	        );
-	        return new ResponseEntity<>(createdSquad, HttpStatus.CREATED);
+	        return new ResponseEntity<>(squadModel, HttpStatus.CREATED);
 				
 	}
 
@@ -116,12 +115,6 @@ public class SquadController {
 	        return ResponseEntity.status(HttpStatus.OK).body(squads);
 	    }
 	
-	 @GetMapping("/search/student-name")
-	    public ResponseEntity<List<Squad>> findByStudentName(@RequestParam("name") String studentName) {
-	        List<Squad> squads = squadService.findByStudentNameContainingIgnoreCase(studentName);
-	        return ResponseEntity.ok(squads);
-	    }
-
      
 	    
 	
