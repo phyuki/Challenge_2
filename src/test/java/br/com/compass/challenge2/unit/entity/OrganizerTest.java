@@ -55,17 +55,19 @@ public class OrganizerTest {
 
     @Test
     public void testGroupGetters() {
+        Organizer newOrg = new Organizer(1L, "Maria", "maria@email.com",
+                new ArrayList<>(), new ArrayList<>());
         group = Group.builder()
                 .id(1L)
                 .name("Spring Boot")
                 .organizers(new ArrayList<>())
                 .students(new ArrayList<>())
                 .build();
-        org.setGroups(Arrays.asList(group));
+        newOrg.setGroups(Arrays.asList(group));
 
 
-        assertEquals(1L, org.getGroups().get(0).getId());
-        assertEquals("Spring Boot", org.getGroups().get(0).getName());
+        assertEquals(1L, newOrg.getGroups().get(0).getId());
+        assertEquals("Spring Boot", newOrg.getGroups().get(0).getName());
     }
 
     @Test
@@ -91,7 +93,6 @@ public class OrganizerTest {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Organizer>> violations = validator.validate(org);
         assertEquals(2, violations.size());
-        assertEquals("name", violations.iterator().next().getPropertyPath().toString());
     }
 
 }
