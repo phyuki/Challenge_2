@@ -210,4 +210,68 @@ public class AssessmentControllerTest implements ConfigTest {
                 .andExpect(jsonPath("$._embedded.assessmentList", hasSize(1)))
                 .andExpect(jsonPath("$._embedded.assessmentList[0].activityName", is("Physics Test")));
     }
+
+    @Test
+    public void testUpdatePartialAssessment() throws Exception {
+        Assessment existingAssessment = new Assessment();
+        existingAssessment.setStudent(student);
+        existingAssessment.setActivityName("Chemistry Test");
+        existingAssessment.setGrade(8.0f);
+        existingAssessment = assessmentService.save(existingAssessment);
+
+        AssessmentDTO assessmentDTO = new AssessmentDTO();
+        assessmentDTO.setGrade(9.0f);
+
+        String json = objectMapper.writeValueAsString(assessmentDTO);
+
+        mockMvc.perform(patch("/api/assessments/{id}", existingAssessment.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.grade", is(9.0)));
+
+        mockMvc.perform(get("/api/assessments/{id}", existingAssessment.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.activityName", is("Chemistry Test")))
+                .andExpect(jsonPath("$.id", is(student.getId().intValue())));
+    }
+
+    @Test
+    public void testCreateAssessmentWithInvalidGrade() throws Exception {
+        AssessmentDTO assessmentDTO = new AssessmentDTO();
+        assessmentDTO.setStudentId(student.getId());
+        assessmentDTO.setActivityName("Invalid Grade Test");
+        assessmentDTO.setGrade(null);
+
+        String json = objectMapper.writeValueAsString(assessmentDTO);
+
+        mockMvc.perform(post("/api/assessments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testCreateAssessmentWithInvalidStudentId() throws Exception {
+        AssessmentDTO assessmentDTO = new AssessmentDTO();
+        assessmentDTO.setStudentId(999L);
+        assessmentDTO.setActivityName("Invalid Student Test");
+        assessmentDTO.setGrade(8.0f);
+
+        String json = objectMapper.writeValueAsString(assessmentDTO);
+
+        mockMvc.perform(post("/api/assessments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testGetAllAssessmentsEmpty() throws Exception {
+        mockMvc.perform(get("/api/assessments")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
 }

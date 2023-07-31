@@ -15,7 +15,7 @@ import jakarta.validation.ConstraintViolationException;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
-    ProblemDetail handleEntityNotFoundException(EntityNotFoundException e) {
+   public ProblemDetail handleEntityNotFoundException(EntityNotFoundException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         problemDetail.setProperty("timestamp", Instant.now());
         problemDetail.setProperty("stacktrace", e.getStackTrace());
@@ -24,7 +24,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    ProblemDetail handleIllegalArgumentException(IllegalArgumentException e) {
+    public ProblemDetail handleIllegalArgumentException(IllegalArgumentException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
                 e.getLocalizedMessage());
         problemDetail.setProperty("timestamp", Instant.now());
@@ -34,7 +34,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    ProblemDetail handleConstraintViolationException(ConstraintViolationException e) {
+    public ProblemDetail handleConstraintViolationException(ConstraintViolationException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
                 e.getLocalizedMessage());
         problemDetail.setProperty("timestamp", Instant.now());
@@ -42,4 +42,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return problemDetail;
     }
+
 }

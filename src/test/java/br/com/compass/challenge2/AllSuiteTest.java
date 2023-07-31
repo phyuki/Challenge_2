@@ -11,7 +11,8 @@ import org.junit.platform.suite.api.Suite;
 @Testable
 @SelectClasses({
         SuiteIntegrateTest.class,
-        SuiteUnitTest.class
+        SuiteUnitTest.class,
+
 })
 public class AllSuiteTest {
 }
