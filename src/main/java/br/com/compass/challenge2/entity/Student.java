@@ -38,7 +38,7 @@ public class Student extends RepresentationModel<Student> {
     @JsonIgnore
     private Squad squad;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Assessment> assessments;
 }
