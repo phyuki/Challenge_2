@@ -9,7 +9,8 @@ import org.junit.platform.suite.api.Suite;
         AssessmentControllerTest.class,
         SquadControllerTest.class,
         StudentControllerTest.class,
-        GroupControllerTest.class
+        GroupControllerTest.class,
+        OrganizerControllerTest.class
 })
 public class SuiteController {
 }
