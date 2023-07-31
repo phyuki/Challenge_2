@@ -8,7 +8,8 @@ import org.junit.platform.suite.api.Suite;
 @SelectClasses({
         AssessmentControllerTest.class,
         SquadControllerTest.class,
-        StudentControllerTest.class
+        StudentControllerTest.class,
+        GroupControllerTest.class
 })
 public class SuiteController {
 }

@@ -142,13 +142,45 @@ public class GroupServiceTest implements ConfigTest {
     }
 
     @Test
-    void deleteExistingGroup() {
+    void deleteGroupWithoutStudentsNeitherOrganizers() {
 
         when(groupRepository.findById(1L)).thenReturn(Optional.of(group));
 
-        Group groupStudent = groupService.deleteById(1L);
+        Group deletedGroup = groupService.deleteById(1L);
 
-        assertThat(groupStudent).usingRecursiveComparison().isEqualTo(group);
+        assertThat(deletedGroup).usingRecursiveComparison().isEqualTo(group);
+        verify(groupRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void deleteGroupWithStudentsAndOrganizers() {
+
+        Student student1 = new Student();
+        student1.setName("Pedro");
+        student1.setEmail("pedro@email.com");
+
+        Student student2 = new Student();
+        student2.setName("João");
+        student2.setEmail("joao@email.com");
+        group.setStudents(new ArrayList<>(Arrays.asList(student1, student2)));
+
+        Organizer org1 = new Organizer();
+        org1.setName("Renan");
+        org1.setEmail("renan@email.com");
+        org1.setGroups(new ArrayList<Group>());
+
+        Organizer org2 = new Organizer();
+        org2.setName("Maria");
+        org2.setEmail("maria@email.com");
+        org2.setGroups(new ArrayList<Group>());
+
+        group.setOrganizers(new ArrayList<>(Arrays.asList(org1, org2)));
+
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(group));
+
+        Group deletedGroup = groupService.deleteById(1L);
+
+        assertThat(deletedGroup).usingRecursiveComparison().isEqualTo(group);
         verify(groupRepository, times(1)).deleteById(1L);
     }
 
