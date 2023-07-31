@@ -19,6 +19,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class Group extends RepresentationModel<Group> {
@@ -31,7 +32,7 @@ public class Group extends RepresentationModel<Group> {
     @Column(name = "group_name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "group")
     private List<Student> students;
 
     @ManyToMany(mappedBy = "groups", fetch = FetchType.EAGER)

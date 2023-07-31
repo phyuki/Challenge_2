@@ -6,7 +6,9 @@ import br.com.compass.challenge2.entity.Organizer;
 import br.com.compass.challenge2.entity.Student;
 import br.com.compass.challenge2.repository.GroupRepository;
 import br.com.compass.challenge2.repository.OrganizerRepository;
+import br.com.compass.challenge2.repository.StudentRepository;
 import br.com.compass.challenge2.service.GroupService;
+import br.com.compass.challenge2.service.StudentService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,12 +29,14 @@ public class GroupServiceTest implements ConfigTest {
     private GroupRepository groupRepository;
     @MockBean
     private OrganizerRepository organizerRepository;
+    @MockBean
+    private StudentRepository studentRepository;
 
     private Group group;
 
     @BeforeEach
     public void setup(){
-        groupService = new GroupService(groupRepository, organizerRepository);
+        groupService = new GroupService(groupRepository, organizerRepository, studentRepository);
         group = Group.builder()
                 .id(1L)
                 .name("Spring Boot")
