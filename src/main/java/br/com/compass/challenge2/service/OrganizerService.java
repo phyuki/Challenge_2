@@ -31,17 +31,13 @@ public class OrganizerService implements CrudService<Organizer> {
     }
 
     @Override
-    public Organizer update(Organizer entity) {
-        return null;
-    }
-
-    @Override
     public Organizer save(Organizer organizer) {
         return organizerRepository.save(organizer);
     }
 
-    public Organizer update(Long id, Organizer updatedOrganizer) {
-        Organizer existingOrganizer = findById(id);
+    @Override
+    public Organizer update(Organizer updatedOrganizer) {
+        Organizer existingOrganizer = findById(updatedOrganizer.getId());
         existingOrganizer.setName(updatedOrganizer.getName());
         existingOrganizer.setEmail(updatedOrganizer.getEmail());
         existingOrganizer.setGroups(updatedOrganizer.getGroups());
@@ -63,34 +59,4 @@ public class OrganizerService implements CrudService<Organizer> {
 
 		return organizer;
 	}
-
-    // Métodos de pesquisa e filtragem
-
-    public List<Organizer> findByNameContainingIgnoreCase(String name) {
-        return organizerRepository.findByNameContainingIgnoreCase(name);
-    }
-
-    public List<Organizer> findByEmailContainingIgnoreCase(String email) {
-        return organizerRepository.findByEmailContainingIgnoreCase(email);
-    }
-
-    public List<Organizer> findByGroupName(String groupName) {
-        return organizerRepository.findByGroupName(groupName);
-    }
-
-    public List<Organizer> findByRole(Role role) {
-        return organizerRepository.findByRole(role);
-    }
-
-    public List<Organizer> findAllByOrderByNameAsc() {
-        return organizerRepository.findAllByOrderByNameAsc();
-    }
-
-    public List<Organizer> findAllByOrderByEmailAsc() {
-        return organizerRepository.findAllByOrderByEmailAsc();
-    }
-
-    public List<Organizer> findAllByOrderByIdAsc() {
-        return organizerRepository.findAllByOrderByIdAsc();
-    }
 }
