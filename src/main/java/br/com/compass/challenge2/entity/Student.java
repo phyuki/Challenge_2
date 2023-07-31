@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -41,4 +43,18 @@ public class Student extends RepresentationModel<Student> {
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Assessment> assessments;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Student student = (Student) o;
+        return Objects.equals(id, student.id) && Objects.equals(name, student.name) && Objects.equals(email, student.email) && Objects.equals(group, student.group) && Objects.equals(squad, student.squad) && Objects.equals(assessments, student.assessments);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, email, squad, assessments);
+    }
 }
