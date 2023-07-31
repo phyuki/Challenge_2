@@ -2,8 +2,10 @@ package br.com.compass.challenge2.service;
 
 import br.com.compass.challenge2.entity.Group;
 import br.com.compass.challenge2.entity.Organizer;
+import br.com.compass.challenge2.entity.Student;
 import br.com.compass.challenge2.repository.GroupRepository;
 import br.com.compass.challenge2.repository.OrganizerRepository;
+import br.com.compass.challenge2.repository.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +21,14 @@ public class GroupService implements CrudService<Group> {
 
     private final GroupRepository groupRepository;
     private final OrganizerRepository organizerRepository;
+    private final StudentRepository studentRepository;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository, OrganizerRepository organizerRepository) {
+    public GroupService(GroupRepository groupRepository, OrganizerRepository organizerRepository,
+                        StudentRepository studentRepository) {
         this.groupRepository = groupRepository;
         this.organizerRepository = organizerRepository;
+        this.studentRepository = studentRepository;
     }
 
     @Override
@@ -46,13 +51,15 @@ public class GroupService implements CrudService<Group> {
 
         Group savedGroup = groupRepository.save(group);
         List<Organizer> organizersInGroup = new ArrayList<>(savedGroup.getOrganizers());
-
+        List<Student> studentsInGroup = new ArrayList<>(savedGroup.getStudents());
         for(Organizer org : organizersInGroup){
             org.getGroups().add(savedGroup);
         }
-
+        for(Student student : studentsInGroup){
+            student.setGroup(savedGroup);
+        }
         organizerRepository.saveAll(organizersInGroup);
-
+        studentRepository.saveAll(studentsInGroup);
         return savedGroup;
     }
 
@@ -65,11 +72,21 @@ public class GroupService implements CrudService<Group> {
         }
     }
 
+    @Transactional
     @Override
     public Group deleteById(Long id) {
         Group group;
         try {
             group = groupRepository.findById(id).get();
+            for(Student student : group.getStudents()){
+                student.setGroup(null);
+            }
+            List<Organizer> organizersInGroup = new ArrayList<>(group.getOrganizers());
+            for(Organizer org : organizersInGroup){
+                org.getGroups().remove(group);
+            }
+            group.getOrganizers().clear();
+            System.out.println(group.getId());
             groupRepository.deleteById(id);
         } catch (NoSuchElementException e) {
             throw new EntityNotFoundException("Group does not exist with id: " + id);
