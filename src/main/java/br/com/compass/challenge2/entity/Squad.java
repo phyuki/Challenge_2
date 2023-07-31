@@ -26,9 +26,7 @@ public class Squad extends RepresentationModel<Squad> {
 
     @OneToMany(mappedBy = "squad", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Student> students;  
-    
-    
-    
+        
     
     
 }
