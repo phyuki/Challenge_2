@@ -111,7 +111,7 @@ public class OrganizerServiceTest implements ConfigTest {
         when(organizerRepository.findById(1L)).thenReturn(Optional.of(organizer));
         when(organizerRepository.save(any())).thenReturn(organizer);
 
-        Organizer updatedOrg = organizerService.update(1L, organizer);
+        Organizer updatedOrg = organizerService.update(organizer);
 
         assertEquals(1L, updatedOrg.getId());
         assertEquals("Victor", updatedOrg.getName());
@@ -123,7 +123,7 @@ public class OrganizerServiceTest implements ConfigTest {
     void updateNonExistingOrganizer() {
         when(organizerRepository.existsById(1L)).thenReturn(false);
 
-        assertThrows(EntityNotFoundException.class, () -> organizerService.update(1L, organizer));
+        assertThrows(EntityNotFoundException.class, () -> organizerService.update(organizer));
     }
 
     @Test
