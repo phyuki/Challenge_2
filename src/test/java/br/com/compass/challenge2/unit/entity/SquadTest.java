@@ -1,86 +1,105 @@
 package br.com.compass.challenge2.unit.entity;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 
-
-import java.util.List;
-
+import br.com.compass.challenge2.entity.Group;
 import br.com.compass.challenge2.entity.Squad;
 import br.com.compass.challenge2.entity.Student;
-import br.com.compass.challenge2.repository.SquadRepository;
-
-import static org.junit.jupiter.api.Assertions.*;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 
 public class SquadTest {
 
-    private Squad squad;
+    private Validator validator;
 
     @BeforeEach
     public void setUp() {
-        squad = new Squad();
+        validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
     @Test
-    public void testSetAndGetId() {
-        Long id = 1L;
-        squad.setId(id);
-        assertEquals(id, squad.getId());
+    public void testValidSquadEntity() {
+     
+        Squad squad = new Squad();
+        squad.setId(1L);
+        squad.setSquadName("Squad 1");
+
+     
+        Set<ConstraintViolation<Squad>> violations = validator.validate(squad);
+        assertTrue(violations.isEmpty());
     }
 
     @Test
-    public void testSetAndGetSquadName() {
-        String squadName = "Teste Squad";
-        squad.setSquadName(squadName);
-        assertEquals(squadName, squad.getSquadName());
+    public void testInvalidSquadName() {        
+        Squad squad = new Squad();
+        squad.setId(1L);
+        squad.setSquadName("");       
+        Set<ConstraintViolation<Squad>> violations = validator.validate(squad);
+        assertFalse(violations.isEmpty());
+        assertEquals(1, violations.size());
+        assertEquals("Nome do squad não pode ser vazio", violations.iterator().next().getMessage());
     }
 
     @Test
-    public void testSetAndGetStudents() {
+    public void testValidSquadWithGroupsAndStudents() {
+    
+        Squad squad = new Squad();
+        squad.setId(1L);
+        squad.setSquadName("Squad 1");
+
+        Group group1 = new Group();
+        group1.setId(1L);
+        group1.setName("Group 1");
+
+        Group group2 = new Group();
+        group2.setId(2L);
+        group2.setName("Group 2");
+       
         Student student1 = new Student();
         student1.setId(1L);
-        student1.setName("Estudante 1");
+        student1.setName("Marcos");
+        student1.setEmail("marcos123doe@example.com");
+        student1.setGroup(group1);
 
         Student student2 = new Student();
         student2.setId(2L);
-        student2.setName("Estudante 2");
+        student2.setName("Joao");
+        student2.setEmail("joao123@example.com");
+        student2.setGroup(group2);
 
-        List<Student> students = new ArrayList<>();
-        students.add(student1);
-        students.add(student2);
+        
+        squad.getGroups().add(group1);
+        squad.getGroups().add(group2);
+        squad.getStudents().add(student1);
+        squad.getStudents().add(student2);
 
-        squad.setStudents(students);
-
-        assertNotNull(squad.getStudents());
-        assertEquals(2, squad.getStudents().size());
+        
+        Set<ConstraintViolation<Squad>> violations = validator.validate(squad);
+        assertTrue(violations.isEmpty());
     }
 
     @Test
-    public void testAddStudent() {
-        Student student = new Student();
-        student.setId(1L);
-        student.setName("Student 1");
+    public void testInvalidSquadWithNullGroupsAndStudents() {       
+        Squad squad = new Squad();
+        squad.setId(1L);
+        squad.setSquadName("Squad 1");
 
-        squad.addStudent(student);
+       
+        Set<ConstraintViolation<Squad>> violations = validator.validate(squad);
+        assertFalse(violations.isEmpty());
+        assertEquals(2, violations.size());
 
-        assertNotNull(squad.getStudents());
-        assertEquals(1, squad.getStudents().size());
-        assertEquals(student, squad.getStudents().get(0));
-    }
-
-    @Test
-    public void testRemoveStudent() {
-        Student student = new Student();
-        student.setId(1L);
-        student.setName("Student 1");
-
-        squad.addStudent(student);
-        squad.removeStudent(student);
-
-        assertNotNull(squad.getStudents());
-        assertEquals(0, squad.getStudents().size());
+        assertThat(violations)
+                .extracting(ConstraintViolation::getMessage)
+                .contains("Grupo não pode estar vazio.", "Estudantes não pode estar vazio");
     }
 }
+  
