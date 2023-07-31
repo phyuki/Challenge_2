@@ -23,21 +23,18 @@ public class SquadServiceTest implements ConfigTest {
 
     @Test
     public void testSaveSquad() {
-        // Criar uma nova Squad para teste
+        
         Squad squad = new Squad();
         squad.setSquadName("JEDGP");
-
-        // Salvar a Squad no banco de dados
-        Squad savedSquad = squadService.save(squad);
-
-        // Verificar se a Squad foi salva com sucesso
+   
+        Squad savedSquad = squadService.save(squad);       
         assertNotNull(savedSquad.getId());
         assertEquals("JEDGP", savedSquad.getSquadName());
     }
 
     @Test
     public void testFindAllSquads() {
-        // Cria algumas Squads para teste
+        
         Squad squad1 = new Squad();
         squad1.setSquadName("Squad Teste 1");
 
@@ -126,8 +123,7 @@ public class SquadServiceTest implements ConfigTest {
 
     // Teste para o filtro de pesquisa a partir do nome da Squad
     @Test
-    public void testFindBySquadNameContainingIgnoreCase() {
-        // Cria algumas Squads para teste.
+    public void testFindBySquadNameContainingIgnoreCase() {       
         Squad squad1 = new Squad();
         squad1.setSquadName("Squad Teste 6");
 
@@ -137,10 +133,8 @@ public class SquadServiceTest implements ConfigTest {
         squadService.save(squad1);
         squadService.save(squad2);
 
-        // Pesquisa Squads a partir do nome.
-        List<Squad> foundSquads = squadService.findBySquadNameContainingIgnoreCase("Teste");
-
-        // Verifica se as Squads foram encontradas com éxito.
+      
+        List<Squad> foundSquads = squadService.findBySquadNameContainingIgnoreCase("Teste");       
         assertNotNull(foundSquads);
         assertEquals(2, foundSquads.size());
     }
