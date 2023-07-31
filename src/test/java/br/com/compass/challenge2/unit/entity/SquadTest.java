@@ -2,7 +2,7 @@ package br.com.compass.challenge2.unit.entity;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Set;
+import java.util.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,23 @@ public class SquadTest {
      
         Set<ConstraintViolation<Squad>> violations = validator.validate(squad);
         assertTrue(violations.isEmpty());
-    }       
+    }     
+    
+    @Test
+    public void testSquadSetter() {
+        Squad squad = new Squad();
+        squad.setId(1L);
+        assertEquals(1L, squad.getId());
+    }
+    
+    @Test
+    public void testAllArgsConstructor() {
+        Squad squad = new Squad(1L, "Squad 1", new ArrayList<>());
+        assertNotNull(squad);
+        assertEquals(1L, squad.getId());
+        assertEquals("Squad 1", squad.getSquadName());
+        assertNotNull(squad.getStudents());
+    }
 
     @Test
     public void testInvalidSquadName() {        
