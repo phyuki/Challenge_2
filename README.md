@@ -10,5 +10,12 @@ The goal in this technical challenge is to develop a RESTful API, which is capab
 * Unit Tests (JUnit 5, Mockito)  
 * Integration Tests (MockMvc)  
 
+## Modeling
+### Class diagram
+![Class diagram](https://raw.githubusercontent.com/kia735/Challenge_2/main/docs/class_diagram.png)
+
+### Database diagram
+![Database diagram](https://raw.githubusercontent.com/kia735/Challenge_2/main/docs/database_diagram.png)
+
 ## API documentation
 To access the API documentation, it is necessary to start the application and then access the specified endpoint: **/swagger-ui/index.html.** This route will provide an interactive interface that details all relevant information about the API, including available endpoints, accepted parameters, and response formats.
