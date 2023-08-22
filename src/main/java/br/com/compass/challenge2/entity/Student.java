@@ -45,6 +45,13 @@ public class Student extends RepresentationModel<Student> {
     @JsonIgnore
     private List<Assessment> assessments;
 
+    public Student(Long id, String name, String email, List<Assessment> assessments) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.assessments = assessments;
+    }
+
     @Override
     public boolean equals(@Nullable Object o) {
         if (this == o) return true;

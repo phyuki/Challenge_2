@@ -26,7 +26,6 @@ public class Assessment extends RepresentationModel<Assessment> {
     @Column(unique = true)
     private Long id;
 
-    @NotNull
     @ManyToOne
     private Student student;
 

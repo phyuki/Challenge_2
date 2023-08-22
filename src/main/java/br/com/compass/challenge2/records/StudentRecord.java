@@ -1,6 +1,9 @@
 package br.com.compass.challenge2.records;
 
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotBlank;
 
-public record StudentRecord(Long id, String name, String email) {
+import java.util.List;
+
+public record StudentRecord(@NotBlank String name, @NotBlank String email, List<Long> assessIDs) {
 }

@@ -2,8 +2,13 @@ package br.com.compass.challenge2.controller;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import br.com.compass.challenge2.entity.Assessment;
+import br.com.compass.challenge2.entity.Organizer;
+import br.com.compass.challenge2.records.StudentRecord;
+import br.com.compass.challenge2.service.AssessmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,19 +30,28 @@ import jakarta.validation.Valid;
 public class StudentController {
 
     private final StudentService studentService;
+    private final AssessmentService assessService;
 
     @Autowired
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, AssessmentService assessService) {
         this.studentService = studentService;
+        this.assessService = assessService;
     }
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(@Valid @RequestBody Student student) {
-        Student createdStudent = studentService.save(student);
+    public ResponseEntity<Student> createStudent(@Valid @RequestBody StudentRecord studentRecord) {
+
+        List<Assessment> assessments = new ArrayList<>();
+        if(studentRecord.assessIDs() != null) {
+            for (Long assessID : studentRecord.assessIDs()) {
+                assessments.add(assessService.findById(assessID));
+            }
+        }
+        Student createdStudent = new Student(null, studentRecord.name(), studentRecord.email(), assessments);
+        studentService.save(createdStudent);
+
         createdStudent.add(
                 linkTo(methodOn(StudentController.class).findStudentById(createdStudent.getId())).withSelfRel(),
-                linkTo(methodOn(StudentController.class).updateStudent(createdStudent.getId(), student))
-                        .withRel("update"),
                 linkTo(methodOn(StudentController.class).deleteStudent(createdStudent.getId())).withRel("delete"),
                 linkTo(methodOn(StudentController.class).findAllStudents()).withRel("all_students"));
 
@@ -50,8 +64,6 @@ public class StudentController {
 
         students = students.stream().map(student -> student.add(
                 linkTo(methodOn(StudentController.class).findStudentById(student.getId())).withSelfRel(),
-                linkTo(methodOn(StudentController.class).updateStudent(student.getId(), student))
-                        .withRel("update"),
                 linkTo(methodOn(StudentController.class).deleteStudent(student.getId())).withRel("delete"),
                 linkTo(methodOn(AssessmentController.class).getAssessmentsByStudentId(student.getId())).withRel("assessments"))).toList();
 
@@ -62,7 +74,6 @@ public class StudentController {
     public ResponseEntity<Student> findStudentById(@PathVariable Long id) {
         Student student = studentService.findById(id);
         student.add(linkTo(methodOn(StudentController.class).findStudentById(id)).withSelfRel(),
-                linkTo(methodOn(StudentController.class).updateStudent(id, student)).withRel("update"),
                 linkTo(methodOn(StudentController.class).deleteStudent(id)).withRel("delete"),
                 linkTo(methodOn(AssessmentController.class).getAssessmentsByStudentId(student.getId())).withRel("assessments"),
                 linkTo(methodOn(StudentController.class).findAllStudents()).withRel("all_students"));
@@ -72,8 +83,16 @@ public class StudentController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Student> updateStudent(@Valid @PathVariable Long id,
-                                                 @RequestBody Student student) {
-        student.setId(id);
+                                                 @RequestBody StudentRecord studentRecord) {
+
+        List<Assessment> assessments = new ArrayList<>();
+        if(studentRecord.assessIDs() != null) {
+            for (Long assessID : studentRecord.assessIDs()) {
+                assessments.add(assessService.findById(assessID));
+            }
+        }
+
+        Student student = new Student(id, studentRecord.name(), studentRecord.email(), assessments);
         Student updatedStudent = studentService.update(student);
         updatedStudent.add(linkTo(methodOn(StudentController.class).findStudentById(id)).withSelfRel(),
                 linkTo(methodOn(StudentController.class).findAllStudents()).withRel("all_students"));

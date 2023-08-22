@@ -2,6 +2,7 @@ package br.com.compass.challenge2.controller;
 import br.com.compass.challenge2.dto.AssessmentDTO;
 import br.com.compass.challenge2.entity.Assessment;
 import br.com.compass.challenge2.entity.Student;
+import br.com.compass.challenge2.records.AssessmentRecord;
 import br.com.compass.challenge2.service.AssessmentService;
 import br.com.compass.challenge2.service.StudentService;
 import jakarta.validation.Valid;
@@ -29,14 +30,14 @@ public class AssessmentController {
         this.studentService = studentService;
     }
     @PostMapping
-    public ResponseEntity<EntityModel<Assessment>> createAssessment(@Valid @RequestBody AssessmentDTO assessmentDto) {
-        Student student = studentService.findById(assessmentDto.getStudentId());
+    public ResponseEntity<EntityModel<Assessment>> createAssessment(@Valid @RequestBody AssessmentRecord assessRecord) {
+        Student student = studentService.findById(assessRecord.studentID());
 
         if (student == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        Assessment createdAssessment = new Assessment(null, student, assessmentDto.getActivityName(), assessmentDto.getGrade());
+        Assessment createdAssessment = new Assessment(null, student, assessRecord.activityName(), assessRecord.grade());
         createdAssessment = assessmentService.save(createdAssessment);
 
         // Adicione links HATEOAS
@@ -48,9 +49,10 @@ public class AssessmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EntityModel<Assessment>> updateAssessment(@PathVariable Long id, @RequestBody AssessmentDTO assessmentDTO) {
+    public ResponseEntity<EntityModel<Assessment>> updateAssessment(@PathVariable Long id,
+                                                                    @RequestBody AssessmentRecord assessRecord) {
         Assessment existingAssessment = assessmentService.findById(id);
-        Student student = studentService.findById(assessmentDTO.getStudentId());
+        Student student = studentService.findById(assessRecord.studentID());
         if (existingAssessment != null) {
 
             if (!existingAssessment.getStudent().getId().equals(student.getId())) {
@@ -61,8 +63,8 @@ public class AssessmentController {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
 
-            existingAssessment.setActivityName(assessmentDTO.getActivityName());
-            existingAssessment.setGrade(assessmentDTO.getGrade());
+            existingAssessment.setActivityName(assessRecord.activityName());
+            existingAssessment.setGrade(assessRecord.grade());
 
             existingAssessment = assessmentService.update(existingAssessment);
 
