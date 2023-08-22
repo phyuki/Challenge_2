@@ -5,5 +5,5 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
-public record StudentRecord(@NotBlank String name, @NotBlank String email, List<Long> assessIDs) {
+public record StudentRecord(@NotBlank String name, @NotBlank String email) {
 }

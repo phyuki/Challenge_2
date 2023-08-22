@@ -41,13 +41,7 @@ public class StudentController {
     @PostMapping
     public ResponseEntity<Student> createStudent(@Valid @RequestBody StudentRecord studentRecord) {
 
-        List<Assessment> assessments = new ArrayList<>();
-        if(studentRecord.assessIDs() != null) {
-            for (Long assessID : studentRecord.assessIDs()) {
-                assessments.add(assessService.findById(assessID));
-            }
-        }
-        Student createdStudent = new Student(null, studentRecord.name(), studentRecord.email(), assessments);
+        Student createdStudent = new Student(null, studentRecord.name(), studentRecord.email(), null);
         studentService.save(createdStudent);
 
         createdStudent.add(
@@ -85,15 +79,10 @@ public class StudentController {
     public ResponseEntity<Student> updateStudent(@Valid @PathVariable Long id,
                                                  @RequestBody StudentRecord studentRecord) {
 
-        List<Assessment> assessments = new ArrayList<>();
-        if(studentRecord.assessIDs() != null) {
-            for (Long assessID : studentRecord.assessIDs()) {
-                assessments.add(assessService.findById(assessID));
-            }
-        }
-
-        Student student = new Student(id, studentRecord.name(), studentRecord.email(), assessments);
-        Student updatedStudent = studentService.update(student);
+        Student student = studentService.findById(id);
+        Student newStudent = new Student(id, studentRecord.name(),
+                studentRecord.email(), student.getAssessments());
+        Student updatedStudent = studentService.update(newStudent);
         updatedStudent.add(linkTo(methodOn(StudentController.class).findStudentById(id)).withSelfRel(),
                 linkTo(methodOn(StudentController.class).findAllStudents()).withRel("all_students"));
 
