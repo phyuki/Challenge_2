@@ -3,6 +3,7 @@ package br.com.compass.challenge2.service;
 import br.com.compass.challenge2.entity.Group;
 import br.com.compass.challenge2.entity.Organizer;
 import br.com.compass.challenge2.entity.Student;
+import br.com.compass.challenge2.records.GroupRecord;
 import br.com.compass.challenge2.repository.GroupRepository;
 import br.com.compass.challenge2.repository.OrganizerRepository;
 import br.com.compass.challenge2.repository.StudentRepository;
