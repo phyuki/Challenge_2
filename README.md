@@ -25,4 +25,4 @@ To access the API documentation, it is necessary to start the application and th
 With Flyway framework, this application guarantees an evolution of database schemas in an automated and controlled way and promote application versioning during development.
 
 ### CRUD Implementation with Records
-Due to the ease and safety of using records within Java applications, it is possible to use records as DTOs to transfer data between layers. It was implemented to demonstrate expertise in the area due to the extra challenge.
+Due to the ease and safety of using records within Java applications, it is possible to use records as DTOs to transfer data between layers. 
