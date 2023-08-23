@@ -1,4 +1,6 @@
 package br.com.compass.challenge2.records;
 
-public record OrganizerRecord(Long id, String name, String email) {
+import jakarta.validation.constraints.NotBlank;
+
+public record OrganizerRecord(@NotBlank String name, @NotBlank String email) {
 }

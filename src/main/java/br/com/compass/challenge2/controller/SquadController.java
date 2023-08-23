@@ -2,8 +2,12 @@ package br.com.compass.challenge2.controller;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import br.com.compass.challenge2.entity.Student;
+import br.com.compass.challenge2.records.SquadRecord;
+import br.com.compass.challenge2.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -25,20 +29,20 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/squads")
 public class SquadController {
 	private final SquadService squadService;
+	private final StudentService studentService;
 
 	@Autowired
-	public SquadController(SquadService squadService) {
+	public SquadController(SquadService squadService, StudentService studentService) {
 		this.squadService = squadService;
+		this.studentService = studentService;
 	}
-    
-	
+
 	@GetMapping
 	public ResponseEntity<List<Squad>> findAllSquads() {
         List<Squad> squads = squadService.findAll();
 
         squads.forEach(squad -> squad.add(
-                linkTo(methodOn(SquadController.class).getSquadById(squad.getId())).withSelfRel(),
-                linkTo(methodOn(SquadController.class).updateSquad(squad.getId(), squad)).withRel("update")));
+                linkTo(methodOn(SquadController.class).getSquadById(squad.getId())).withSelfRel()));
 
         return new ResponseEntity<>(squads, HttpStatus.OK);
     }
@@ -60,24 +64,39 @@ public class SquadController {
    	
 	
 	@PostMapping
-	public ResponseEntity<?> createSquad(@RequestBody Squad squad) {
-		 squad.setId(0L);
-	        Squad createdSquad = squadService.save(squad);
+	public ResponseEntity<?> createSquad(@RequestBody @Valid SquadRecord squadRecord) {
 
-	        EntityModel<Squad> squadModel = EntityModel.of(createdSquad).add(
+		List<Student> students = new ArrayList<>();
+		if(squadRecord.studentIDs() != null) {
+			for (Long studentID : squadRecord.studentIDs()) {
+				students.add(studentService.findById(studentID));
+			}
+		}
+		Squad squad = new Squad(0L, squadRecord.squadName(), students);
+		Squad createdSquad = squadService.save(squad);
+
+		EntityModel<Squad> squadModel = EntityModel.of(createdSquad).add(
 	                linkTo(methodOn(SquadController.class).getSquadById(createdSquad.getId())).withSelfRel(),
 	                linkTo(methodOn(SquadController.class).findAllSquads()).withRel("all_squads"),
 	                linkTo(methodOn(SquadController.class).updateSquad(createdSquad.getId(), null)).withRel("update"),
 	                linkTo(methodOn(SquadController.class).deleteSquad(createdSquad.getId())).withRel("delete")
 	        );
-	        return new ResponseEntity<>(squadModel, HttpStatus.CREATED);
+		return new ResponseEntity<>(squadModel, HttpStatus.CREATED);
 				
 	}
 
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<EntityModel<Squad>> updateSquad(@PathVariable Long id, @Valid @RequestBody Squad squad) {
-        squad.setId(id);
+	public ResponseEntity<EntityModel<Squad>> updateSquad(@PathVariable Long id,
+														  @Valid @RequestBody SquadRecord squadRecord) {
+
+		List<Student> students = new ArrayList<>();
+		if(squadRecord.studentIDs() != null) {
+			for (Long studentID : squadRecord.studentIDs()) {
+				students.add(studentService.findById(studentID));
+			}
+		}
+		Squad squad = new Squad(id, squadRecord.squadName(), students);
         Squad updatedSquad = squadService.update(id, squad);
 
         if (updatedSquad != null) {

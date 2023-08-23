@@ -1,6 +1,7 @@
 package br.com.compass.challenge2.controller;
 
 import br.com.compass.challenge2.entity.Organizer;
+import br.com.compass.challenge2.records.OrganizerRecord;
 import br.com.compass.challenge2.service.OrganizerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/organizers")
+@RequestMapping("/api/organizers")
 public class OrganizerController {
     private final OrganizerService organizerService;
 
@@ -29,20 +30,23 @@ public class OrganizerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EntityModel<Organizer> createOrganizer(@RequestBody @Valid Organizer organizer) {
-        Organizer createdOrganizer = organizerService.save(organizer);
+    public EntityModel<Organizer> createOrganizer(@RequestBody @Valid OrganizerRecord orgRecord) {
+
+        Organizer org = new Organizer(0L, orgRecord.name(), orgRecord.email(), null, null);
+        Organizer createdOrganizer = organizerService.save(org);
         return getOrganizerEntityModel(createdOrganizer);
     }
 
     @PutMapping("/{id}")
-    public EntityModel<Organizer> updateOrganizer(@PathVariable Long id, @RequestBody @Valid Organizer updatedOrganizer) {
-        Organizer existingOrganizer = organizerService.findById(id);
-        if (existingOrganizer == null) {
+    public EntityModel<Organizer> updateOrganizer(@PathVariable Long id,
+                                                  @RequestBody @Valid OrganizerRecord orgRecord) {
+        Organizer existingOrg = organizerService.findById(id);
+        if (existingOrg == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Organizer not found with id: " + id);
         }
-
-        updatedOrganizer.setId(id);
-        Organizer savedOrganizer = organizerService.update(updatedOrganizer);
+        Organizer updatedOrg = new Organizer(id, orgRecord.name(), orgRecord.email(),
+                existingOrg.getGroups(), existingOrg.getRoles());
+        Organizer savedOrganizer = organizerService.update(updatedOrg);
         return getOrganizerEntityModel(savedOrganizer);
     }
 

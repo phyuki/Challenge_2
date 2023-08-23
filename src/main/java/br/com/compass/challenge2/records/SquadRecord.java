@@ -1,4 +1,8 @@
 package br.com.compass.challenge2.records;
 
-public record SquadRecord(Long id, String squadName) {
+import jakarta.validation.constraints.NotBlank;
+
+import java.util.List;
+
+public record SquadRecord(@NotBlank String squadName, List<Long> studentIDs) {
 }
